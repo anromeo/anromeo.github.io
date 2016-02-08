@@ -68,7 +68,7 @@ ASSET_MANAGER.downloadAll(function () {
     var background = new Background(gameEngine, ASSET_MANAGER.getAsset("./images/background.jpg"));
     gameEngine.addEntity(background);
 
-    var numZombies = 130;
+    var numZombies = 40;
     for (var i = 0; i < numZombies; i++) {
         gameEngine.addEntity(new Zombie(gameEngine));
     }
