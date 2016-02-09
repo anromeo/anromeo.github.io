@@ -158,7 +158,13 @@ Zombie.prototype.update = function () {
 
     if (this.target && this.target.currentAction !== "growing" &&
         distance(this, this.target) < this.radius + this.target.radius + this.rangeOfAttack) {
+        
         this.currentAction = "attacking";
+        var difX = (this.target.x - this.x)/dist;
+        var difY = (this.target.y - this.y)/dist;
+        this.directionX = difX * acceleration / (dist * dist);
+        this.directionY = difY * acceleration / (dist * dist);
+
         // console.log("Before attack: " + this.target.health);
         this.target.health -= this.strength;
         if (this.target.currentAction === "dying" && this.target.removeFromWorld) {
@@ -177,6 +183,9 @@ Zombie.prototype.update = function () {
         }
     }
 
+    if (!this.target) {
+        this.currentAction = "chasing";
+    }
 
     var speed = Math.sqrt(this.directionX * this.directionX + this.directionY * this.directionY);
     if (speed > this.maxSpeed) {
