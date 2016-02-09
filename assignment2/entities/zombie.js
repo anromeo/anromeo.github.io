@@ -22,7 +22,7 @@ function Zombie(game, clone) {
 	this.x = 800 * Math.random();
 	this.y = 800 * Math.random();
     this.currentAction = "chasing";
-    this.deathTimer = 50;
+    this.deathTimer = 150;
 
     this.setAttackAnimation(ASSET_MANAGER.getAsset("./images/demon.png"), 64, 64, .05, 8, true, false, 8);
     this.setMovingAnimation(ASSET_MANAGER.getAsset("./images/demon-attacking.png"), 64, 66, .05, 8, true, false, 8);
@@ -156,7 +156,7 @@ Zombie.prototype.update = function () {
         
     }
 
-    if (this.target && this.target.currentAction !== "growing" &&
+    if (this.target && this.target.name === "Zombie" && this.target.currentAction !== "growing" &&
         distance(this, this.target) < this.radius + this.target.radius + this.rangeOfAttack) {
         
         this.currentAction = "attacking";
@@ -181,10 +181,6 @@ Zombie.prototype.update = function () {
             this.directionX += difX * acceleration / (dist * dist * acceleration);
             this.directionY += difY * acceleration / (dist * dist * acceleration);
         }
-    }
-
-    if (!this.target) {
-        this.currentAction = "chasing";
     }
 
     var speed = Math.sqrt(this.directionX * this.directionX + this.directionY * this.directionY);
