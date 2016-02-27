@@ -10,6 +10,11 @@ function Animation(spriteSheet, frameWidth, frameHeight, frameDuration, frames, 
     this.loop = loop;
     this.reverse = reverse;
     this.numFramesInRow = numFramesInRow;
+    this.frozen = false;
+}
+
+Animation.prototype.setFrames = function (frames) {
+    this.frames = frames;
 }
 
 // @deprecated function
@@ -47,6 +52,7 @@ Animation.prototype.drawFrameRotate = function (tick, ctx, x, y, theAngle, xOffs
         if (this.loop) this.elapsedTime = 0;
     }
     var frame = this.currentFrame();
+
     var xindex = 0;
     var yindex = 0;
     if (frame > 13) {
@@ -95,6 +101,9 @@ Animation.prototype.rotateAndCache = function (angle, xindex, yindex, translatex
 }
 
 Animation.prototype.currentFrame = function () {
+    if (this.frozen) {
+        return 1;
+    }
     return Math.floor(this.elapsedTime / this.frameDuration);
 }
 

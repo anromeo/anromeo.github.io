@@ -1,4 +1,3 @@
-
 function Background(game, image) {
     NonLivingEntity.call(this, game, 0, 400);
     this.radius = 200;
@@ -50,64 +49,42 @@ Background.prototype.draw = function (ctx) {
 
 /** From 435 */
 
-ASSET_MANAGER.queueDownload("./images/demon.png");
+// ASSET_MANAGER.queueDownload("./images/demon.png");
 ASSET_MANAGER.queueDownload("./images/ZombieWalking.png");
 ASSET_MANAGER.queueDownload("./images/Player2.png");
-ASSET_MANAGER.queueDownload("./images/background.jpg");
+
+ASSET_MANAGER.queueDownload("./images/ForestLevelBig.png");
+ASSET_MANAGER.queueDownload("./images/hospital.png");
 ASSET_MANAGER.queueDownload("./images/boss.png");
+ASSET_MANAGER.queueDownload("./images/flamethrower.png");
+ASSET_MANAGER.queueDownload("./images/HealthPack.png");
+ASSET_MANAGER.queueDownload("./images/speed.png");
+ASSET_MANAGER.queueDownload("./images/flame3.png");
+// ASSET_MANAGER.queueDownload("./images/cone.png");
+ASSET_MANAGER.queueDownload("./images/shooter-walking.png");
+ASSET_MANAGER.queueDownload("./images/shooter-walking2.png");
+
+// Moving Animations
+ASSET_MANAGER.queueDownload("./images/boss-moving.png");
+ASSET_MANAGER.queueDownload("./images/zombie-moving.png");
+
+// Attacking Animations
+ASSET_MANAGER.queueDownload("./images/boss-attacking.png");
+
+ASSET_MANAGER.queueDownload("./images/boss2.png");
+
+ASSET_MANAGER.queueDownload("./images/portal.png");
+ASSET_MANAGER.queueDownload("./images/bossMap1.png");
 
 ASSET_MANAGER.downloadAll(function () {
     console.log("starting up da sheild");
     var canvas = document.getElementById('gameWorld');
     var ctx = canvas.getContext('2d');
 
-    //var numZombies = 2;
-    var numPlayers = 6;
-    //var numRocks = 12;
-
     var gameEngine = new GameEngine();
-    var circle;
-    // for (var i = 0; i < numPlayers; i++) {
-        // circle = new friendlyAI(gameEngine);
-        // gameEngine.addEntity(circle);
-    // }
-    // for (var i = 0; i < numZombies; i++) {
-		// console.log("added zombie");
-        // circle = new Zombie(gameEngine);
-        // gameEngine.addEntity(circle);
-    // }
+	gameEngine.init(ctx);
 
-    // for (var i = 0; i < numRocks; i++) {
-        // circle = new Rock(gameEngine);
-        // gameEngine.addEntity(circle);
-    // }
+	//to add entities, change maps and otherwise setup the game go to gameEngine SetupGameState
+	gameEngine.start();
 
-    var player = new playerControlled(gameEngine);
-    var background = new Background(gameEngine, ASSET_MANAGER.getAsset("./images/background.jpg"));
-    var boss = new Boss(gameEngine, ASSET_MANAGER.getAsset("./images/boss.png"));
-    gameEngine.addEntity(boss);
-  //  gameEngine.addEntity(background);
-    player.controlled = true;
-    gameEngine.addEntity(player);
-    var player2 = new playerControlled(gameEngine);
-  //  gameEngine.addEntity(player2);
-
-    gameEngine.init(ctx);
-    gameEngine.start();
 });
-
-// ASSET_MANAGER.downloadAll(function () {
-//     console.log("starting up da sheild");
-//     var canvas = document.getElementById('gameWorld');
-//     var ctx = canvas.getContext('2d');
-
-//     var gameEngine = new GameEngine();
- 
-//     gameEngine.init(ctx);
-//     gameEngine.start();
-
-//     gameEngine.addEntity(new Demon(gameEngine));
-
-// //    gameEngine.addEntity(new Man(gameEngine, ASSET_MANAGER.getAsset("./img/man2.png")));
-
-// });

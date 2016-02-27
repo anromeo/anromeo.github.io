@@ -1,14 +1,12 @@
 function Rock(game) {
     this.player = 1;
     this.radius = 4;
-    this.name = "Rock";
+	Entity.call(this, game, this.radius + Math.random() * (800 - this.radius * 2), this.radius + Math.random() * (800 - this.radius * 2));
+   	this.name = "Rock";
     this.color = "Gray";
     this.maxSpeed = 200;
     this.thrown = false;
-    this.strength = 50;
-
-    Entity.call(this, game, this.radius + Math.random() * (800 - this.radius * 2), this.radius + Math.random() * (800 - this.radius * 2));
-
+    this.strength = 34;
     this.velocity = { x: 0, y: 0 };
 
 };
@@ -25,7 +23,7 @@ Rock.prototype.collideLeft = function () {
 };
 
 Rock.prototype.collideRight = function () {
-    return (this.x + this.radius) > 800;
+    return (this.x + this.radius) > this.game.map.worldWidth;
 };
 
 Rock.prototype.collideTop = function () {
@@ -33,7 +31,7 @@ Rock.prototype.collideTop = function () {
 };
 
 Rock.prototype.collideBottom = function () {
-    return (this.y + this.radius) > 800;
+    return (this.y + this.radius) > this.game.map.worldHeight;
 };
 
 Rock.prototype.update = function () {
@@ -45,18 +43,10 @@ Rock.prototype.update = function () {
 
     if (this.collideLeft() || this.collideRight()) {
 		this.removeFromWorld = true;
-        this.velocity.x = 0;
-        this.velocity.y = 0;
-        if (this.collideLeft()) this.x = this.radius;
-        if (this.collideRight()) this.x = 800 - this.radius;
     }
 
     if (this.collideTop() || this.collideBottom()) {
 		this.removeFromWorld = true;
-        this.velocity.x = 0;
-        this.velocity.y = 0;
-        if (this.collideTop()) this.y = this.radius;
-        if (this.collideBottom()) this.y = 800 - this.radius;
     }
 
     var chasing = false;
