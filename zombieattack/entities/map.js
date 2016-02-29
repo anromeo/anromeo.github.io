@@ -1,9 +1,15 @@
-function Map(game, image, name, worldWidth, worldHeight, mapRatioWidth, mapRatioHeight, ratio) {
+function Map(game, image, name, worldWidth, worldHeight, mapRatioWidth, mapRatioHeight, ratioX, ratioY) {
 
 	  this.game = game;
 	  this.image = image;
 	  this.name = name;
-	  this.ratio = ratio;
+    if (this.ratioY === undefined) {
+        this.ratioX = ratioX;
+        this.ratioY = ratioX;
+    } else {
+        this.ratioX = ratioX;
+        this.ratioY = ratioY;
+    }
 
 	  this.walls = [];
     this.attracters = [];
@@ -16,7 +22,19 @@ function Map(game, image, name, worldWidth, worldHeight, mapRatioWidth, mapRatio
 
     this.villains = [];
     this.weapons = [];
+    this.items = [];
     this.isBossMap = false;
+    this.mapTrigger = null;
+}
+
+Map.prototype.setItems = function(items) {
+    this.items = items;
+}
+
+Map.prototype.update = function() {
+    if (this.mapTrigger !== null) {
+        this.mapTrigger();
+    }
 }
 
 Map.prototype.addWall = function (wall) {

@@ -67,6 +67,7 @@ ASSET_MANAGER.queueDownload("./images/shooter-walking2.png");
 // Moving Animations
 ASSET_MANAGER.queueDownload("./images/boss-moving.png");
 ASSET_MANAGER.queueDownload("./images/zombie-moving.png");
+ASSET_MANAGER.queueDownload("./images/Rzombie-moving.png");
 
 // Attacking Animations
 ASSET_MANAGER.queueDownload("./images/boss-attacking.png");
@@ -75,6 +76,11 @@ ASSET_MANAGER.queueDownload("./images/boss2.png");
 
 ASSET_MANAGER.queueDownload("./images/portal.png");
 ASSET_MANAGER.queueDownload("./images/bossMap1.png");
+ASSET_MANAGER.queueDownload("./images/ruins.png");
+
+ASSET_MANAGER.queueDownload("./images/key.png");
+
+ASSET_MANAGER.queueDownload(menuBackground);
 
 ASSET_MANAGER.downloadAll(function () {
     console.log("starting up da sheild");

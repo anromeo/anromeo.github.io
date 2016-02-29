@@ -134,6 +134,9 @@ function LivingEntity(game, x, y) {
     this.comfortZone = 200; // the comfortable distance between this LivingEntity and an enemy LivingEntity
     this.personalBubble = 200; // this is the personal space needed for this LivingEntity and allied LivingEntities
 
+    // the current type of animation that is being used
+    this.currentAnimation = "moving";
+
 }
 
 LivingEntity.prototype = new Entity();
@@ -645,8 +648,8 @@ LivingEntity.prototype.draw = function (ctx) {
 
     var positionY = (this.y - this.radius - this.game.getWindowY() - this.radialOffset);
 
-    if (positionX < this.game.surfaceWidth &&  positionX > 0 &&
-        positionY < this.game.surfaceHeight && positionY > 0){
+    if (positionX < this.game.surfaceWidth + 100 &&  positionX > -100 &&
+        positionY < this.game.surfaceHeight + 100 && positionY > -100){
     if (this.movingAnimation && this.type === "playerControlled" && this.controlled === true) {
 
         // Draws the Player
@@ -654,7 +657,19 @@ LivingEntity.prototype.draw = function (ctx) {
 
 
     } else { // If any uncontrolled LivingEntity
-        this.movingAnimation.drawFrameRotate(this.game.clockTick, ctx, this.x - this.radius - this.game.getWindowX() - this.radialOffset, this.y - this.radius - this.game.getWindowY() - this.radialOffset, this.angle);
+
+        if (this.currentAnimation && this.currentAnimation === "attack" && this.attackAnimation !== undefined) {
+
+            this.attackAnimation.drawFrameRotate(this.game.clockTick, ctx, this.x - this.radius - this.game.getWindowX() - this.radialOffset, this.y - this.radius - this.game.getWindowY() - this.radialOffset, this.angle);
+            if (this.attackAnimation.isAnimationOver) {
+                this.attackAnimation.elapsedTime = 0;
+                this.attackAnimation.isAnimationOver = false;
+                this.attackAnimation.isActivated = false;
+                this.currentAnimation = "moving";
+            }
+        } else {
+            this.movingAnimation.drawFrameRotate(this.game.clockTick, ctx, this.x - this.radius - this.game.getWindowX() - this.radialOffset, this.y - this.radius - this.game.getWindowY() - this.radialOffset, this.angle);
+        }
     }
 	
 	  // SHOW health bar if set
@@ -689,8 +704,12 @@ LivingEntity.prototype.collideBottom = function () {
 
 
 LivingEntity.prototype.attack = function(target) {
-    if (target.entTarget) {
+    this.currentAnimation = "attack";
+    if (target.entTarget && ((this.attackAnimation === undefined) || !this.attackAnimation.isActivated)) {
         target.entTarget.health -= this.strength;
+        if (this.attackAnimation !== undefined) {
+            this.attackAnimation.isActivated = true;
+        }
     }
 }
 
@@ -852,14 +871,17 @@ LivingEntity.prototype.update = function () {
 
     if (this.ability1 !== undefined) {
         this.checkAbility(this.ability1Attributes, this.ability1);
+        this.ability1Attributes.activate = false;
     }
 
     if (this.ability2 !== undefined) {
         this.checkAbility(this.ability2Attributes, this.ability2);
+        this.ability2Attributes.activate = false;
     }
 
     if (this.ability3 !== undefined) {
         this.checkAbility(this.ability3Attributes, this.ability3);
+        this.ability3Attributes.activate = false;
     }
 }
 

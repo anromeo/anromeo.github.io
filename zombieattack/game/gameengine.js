@@ -50,7 +50,7 @@ function GameEngine() {
 	this.items = [];
     this.villains = []; // All the Zombies | TODO ? Get rid or change ?
     this.players = []; // All the Players | TODO ? Get rid or change ?
-
+    this.gameRunning = true;
 
     // This is the x and y of the game, they control the rotation of the player
     this.x;
@@ -58,6 +58,7 @@ function GameEngine() {
 
     this.map = null;
 	this.menuMode = "Start";
+    this.hasSeenIntro = false;
 
     this.zombieCooldownNumInitial = 3;  // how often a zombie will appear initially
     this.zombieCooldown = this.zombieCooldownNumInitial; // the cooldown until the next zombie appears
@@ -73,7 +74,7 @@ function GameEngine() {
     this.surfaceWidth = null; // the width of the canvas
     this.surfaceHeight = null; // the height of the canvas
 
-    this.unlocked = false;
+    this.attributePoints = 0;
     // FOREST MAP
     // this.worldWidth = 1600; // the width of the world within the canvas FOREST
     // this.worldHeight = 1600; // the height of the world within the canvas FOREST
@@ -99,6 +100,7 @@ function GameEngine() {
     this.level = 1;
     this.expEarned = 0;
 
+    this.menuBackground = ASSET_MANAGER.getAsset(menuBackground);
 }
 
 /**
@@ -188,6 +190,7 @@ GameEngine.prototype.start = function () {
     (function gameLoop() {
 		if (that.menuMode == "Game") {
 			that.loop();
+            // TURN ON AGAIN!!
 		} else {//if (that.menuMode == "Start" || that.menuMode == "Pause") {
 			that.menuLoop();
 		}       
@@ -210,6 +213,9 @@ GameEngine.prototype.restart = function () {
     this.y;
 
     this.map = null;
+    this.expEarned = 0;
+    this.expToLevelUp = 10;
+    this.level = 1;
 
     this.kills = 0; // this is the number of kills that the player has total
 
@@ -223,40 +229,38 @@ GameEngine.prototype.restart = function () {
 
 GameEngine.prototype.setupGameState = function () {
 
-    // var background = new Background(this, ASSET_MANAGER.getAsset("./images/background.png"));
-//    var boss = new Boss(this, ASSET_MANAGER.getAsset("./images/boss.png"));
-    //this.addEntity(boss);
-  //  this.addEntity(background);
-
-    // var background = new Background(this, ASSET_MANAGER.getAsset("./images/background.png"));
-    // var boss = new Boss(this, ASSET_MANAGER.getAsset("./images/boss.png"));
-	
-
-        //     // HOSPITAL MAP
-    // this.worldWidth = 1400; // the width of the world within the canvas HOSPITAL
-    // this.worldHeight = 1200; // the height of the world within the canvas HOSPITAL
-
-    // this.mapRatioWidth = 400;
-    // this.mapRatioHeight = 400;
-
-        // FOREST MAP
+    // FOREST MAP
     // this.worldWidth = 1600; // the width of the world within the canvas FOREST
     // this.worldHeight = 1600; // the height of the world within the canvas FOREST
 
     // this.mapRatioWidth = 1600; 
     // this.mapRationHeight = 1600;
 
-    // Map(game, image, name, worldWidth, worldHeight, mapRatioWidth, mapRatioHeight, ratio) 
+    // maps instantiated
+    var hospital;
+    var ruins;
 
-    var hospital = new Map(this, ASSET_MANAGER.getAsset("./images/hospital.png"), "Hospital", 1400, 1350, 400, 400, 0.5);
-     // hospital.addWall(new Wall(this, 38, 132, 70, 210));
+    // map ratios
+    var mapRatioHospitalWidth = 400;
+    var mapRatioHosptialHeight = 400;
+    var mapRatioTerrainWidth = 550;
+    var mapRatioTerrainHeight = 550;
 
-    hospital.addWall(new Wall(this, 38, 132, 70, 210));
+    if (this.surfaceHeight === 600) {
+        mapRatioHosptialHeight = 300;
+        mapRatioTerrainHeight = .75 * mapRatioTerrainHeight;
+    }
+
+    // maps created and assigned
+    hospital = new Map(this, ASSET_MANAGER.getAsset("./images/hospital.png"), "Hospital", 1400, 1350, mapRatioHospitalWidth, mapRatioHosptialHeight, 0.5);
+    ruins = new Map(this, ASSET_MANAGER.getAsset("./images/ruins.png"), "Ruins", 2285, 1500, mapRatioTerrainWidth, mapRatioTerrainHeight, 0.68);
+
+    // adding all the walls and attractors for the hospital
     hospital.addWall(new Wall(this, 38, 460, 70, 210));
     hospital.addWall(new Wall(this, 275, 0, 95, 115));
     hospital.addWall(new Wall(this, 275, 208, 95, 240));
     hospital.addWall(new Wall(this, 489, 258, 185, 100));
-    //hospital.addWall(new Wall(this, 275, 540, 100, 215));
+    hospital.addWall(new Wall(this, 275, 540, 100, 215));
     hospital.addWall(new Wall(this, 370, 258, 385, 55));
     hospital.addWall(new Wall(this, 755, 258, 90, 364));
     hospital.addWall(new Wall(this, 845, 490, 258, 85));
@@ -284,8 +288,6 @@ GameEngine.prototype.setupGameState = function () {
     hospital.addWall(new Wall(this, 755, 258, 90, 364));
     hospital.addWall(new Wall(this, 755, 490, 447, 85));
     hospital.addWall(new Wall(this, 1103, 258, 98, 364));
-    // hospital.addWall(new Wall(this, 0, 0, 14000, 50));
-    // hospital.addWall(new Wall(this, 0, 0, 58, 12000));
     hospital.addWall(new Wall(this, 0, 752, 596, 74));
     hospital.addWall(new Wall(this, 696, 752, 160, 74));
     hospital.addWall(new Wall(this, 1083, 752, 675, 74));
@@ -294,7 +296,6 @@ GameEngine.prototype.setupGameState = function () {
     hospital.addWall(new Wall(this, 1083, 1086, 75, 300));
     hospital.addWall(new Wall(this, 180, 970, 78, 400));
     hospital.addWall(new Wall(this, 0, 1280, 14000, 80));
-
     hospital.addAttracter(new Attracter(this, 330, 160, 45));
     hospital.addAttracter(new Attracter(this, 330, 495, 45));
     hospital.addAttracter(new Attracter(this, 645, 800, 49));
@@ -303,20 +304,158 @@ GameEngine.prototype.setupGameState = function () {
     hospital.addAttracter(new Attracter(this, 1182, 660, 33));
     hospital.addAttracter(new Attracter(this, 1182, 144, 70));
     hospital.addAttracter(new Attracter(this, 1123, 1040, 39));
-    this.setMap(hospital);
 
-	var flamethrower = new FlameThrower(this, ASSET_MANAGER.getAsset("./images/flamethrower.png"));
-    this.addEntity(flamethrower);
+    // adding all the ruin walls
+    ruins.addWall(new Wall(this, 285, 212, 70, 210));
+    ruins.addWall(new Wall(this, 285, 282, 212, 75));
+    ruins.addWall(new Wall(this, 145, 355, 205, 75));
+    ruins.addWall(new Wall(this, 920, 77, 65, 130));
+    ruins.addWall(new Wall(this, 850, 145, 130, 68));
+    ruins.addWall(new Wall(this, 785, 355, 140, 140));
+    ruins.addWall(new Wall(this, 1360, -20, 60, 160));
+
+    ruins.addWall(new Wall(this, 1360, 350, 65, 220));
+    ruins.addWall(new Wall(this, 1080, 425, 420, 69));
+    ruins.addWall(new Wall(this, 1425, 425, 79, 283));
+
+    ruins.addWall(new Wall(this, 1932, 360, 65, 138));
+    ruins.addWall(new Wall(this, 1932, 360, 144, 64));
+
+    ruins.addWall(new Wall(this, 1932, 640, 70, 290));
+    ruins.addWall(new Wall(this, 1932, 1078, 70, 135));
+    ruins.addWall(new Wall(this, 1578, 1148, 70, 135));
+    ruins.addWall(new Wall(this, 1578, 1148, 424, 65));
+    ruins.addWall(new Wall(this, 1578, 1435, 70, 130));
+
+    ruins.addWall(new Wall(this, 283, 866, 70, 355));
+    ruins.addWall(new Wall(this, 283, 942, 215, 65));
+
+    ruins.addWall(new Wall(this, 865, 935, 270, 65));
+    ruins.addWall(new Wall(this, 860, 870, 140, 130));
+
+    ruins.addWall(new Wall(this, 856, 1220, 140, 130));
+    ruins.addWall(new Wall(this, 856, 1230, 65, 280));
+
+    ruins.addWall(new Wall(this, 1286, 935, 205, 60));
+    ruins.addWall(new Wall(this, 1360, 855, 140, 130));
+
+    ruins.addWall(new Wall(this, 855, 645, 65, 65));
+
+    ruins.addAttracter(new Attracter(this, 330, 90, 120));
+    ruins.addAttracter(new Attracter(this, 70, 400, 150));
+
+    var hospitalItems = [];
+    var ruinItems = [];
+
+    // Hospital flamethrower
+    HospitalflameSpawn = [];
+    HospitalflameSpawn[0] = { x: 100, y: 100 };
+    HospitalflameSpawn[1] = { x: 440, y: 360 };
+    HospitalflameSpawn[2] = { x: 570, y: 1150 };
+    HospitalflameSpawn[3] = { x: 1020, y: 650 };
+    HospitalflameSpawn[4] = { x: 980, y: 370 };
+
+	var flamethrower = new FlameThrower(this, ASSET_MANAGER.getAsset("./images/flamethrower.png"), HospitalflameSpawn);
+    hospitalItems.push(flamethrower);
+
+
+    // Hospital health with spawning locations
+    HospitalhealthSpawn = [];
+    HospitalhealthSpawn[0] = { x: 500, y: 1150 };
+    HospitalhealthSpawn[1] = { x: 1270, y: 1050 };
+    HospitalhealthSpawn[2] = { x: 970, y: 335 };
 	
-	var healthpack = new HealthPack(this, ASSET_MANAGER.getAsset("./images/HealthPack.png"));
-	this.addEntity(healthpack);
+	var healthpack = new HealthPack(this, ASSET_MANAGER.getAsset("./images/HealthPack.png"), HospitalhealthSpawn);
+	hospitalItems.push(healthpack);
 
-    var speed = new Speed(this, ASSET_MANAGER.getAsset("./images/speed.png"));
-    this.addEntity(speed);
+    // Hospital speed spawning locations
+    HospitalspeedSpawn = [];
+    HospitalspeedSpawn[0] = { x: 640, y: 450 };
+    HospitalspeedSpawn[1] = { x: 1300, y: 700 };
+    HospitalspeedSpawn[2] = { x: 1000, y: 1170 };
+
+    var speed = new Speed(this, ASSET_MANAGER.getAsset("./images/speed.png"), HospitalspeedSpawn);
+    hospitalItems.push(speed);
+    hospital.setItems(hospitalItems);
+
+    // Ruins flamethrower
+    RuinflameSpawn = [];
+    RuinflameSpawn[0] = { x: 1450, y: 100 };
+
+    var flamethrower = new FlameThrower(this, ASSET_MANAGER.getAsset("./images/flamethrower.png"), RuinflameSpawn);
+    ruinItems.push(flamethrower);
+
+    // Ruins health
+    RuinhealthSpawn = [];
+    RuinhealthSpawn[0] = { x: 500, y: 1150 };
+
+    var healthpack = new HealthPack(this, ASSET_MANAGER.getAsset("./images/HealthPack.png"), RuinhealthSpawn);
+    ruinItems.push(healthpack);
+
+    // Ruins speed
+    RuinspeedSpawn = [];
+    RuinspeedSpawn[0] = { x: 640, y: 450 };
+
+    var speed = new Speed(this, ASSET_MANAGER.getAsset("./images/speed.png"), RuinspeedSpawn);
+    ruinItems.push(speed);
+
+
+    hospital.update = function() {
+        if (this.startingKills === undefined) {
+            this.startingKills = this.game.kills;
+        }
+        if (this.game.kills - this.startingKills > 19 && !this.unlocked) {
+                var bossMap = new Map(this, ASSET_MANAGER.getAsset("./images/bossMap1.png"), "Boss Map - Level 1", 800, 600, 800, 600, 0.5);
+                bossMap.addVillain(new Boss(this.game));
+                bossMap.isBossMap = true;
+                this.unlocked = true;
+                this.game.addEntity(new Portal(this.game, 94, 1186, bossMap, 700, 200));
+        }
+    }
+
+    var portal = new Portal(this, 1700, 1400, hospital, 200, 200);
+    ruins.update = function() {
+
+        // if (this.storyClockTick === undefined) {
+        //     this.storyTimer = new Timer();
+        //     this.storyClockTick = 0;
+        //     this.storyClockSeconds = 0;
+        //     this.storyAlpha = [];
+        //     this.alpha1 = 0;
+        //     this.alpha2 = 0;
+        //     this.alpha3 = 0;
+        //     this.alpha4 = 0;
+        //     this.alpha5 = 0;
+        // }
+
+        if (this.randomKillNumber === undefined) {
+            this.randomKillNumber = 1;//10 + randomInt(10);
+            this.keyNeedsAdding = true;
+        }
+        if (this.game.kills === this.randomKillNumber && this.keyNeedsAdding && this.game.lastVillainKilledX) {
+
+            for (var i = 0; i < 20; i++) {
+                this.game.addEntity(new Villain(this.game));
+            }
+            this.game.addEntity(new Key(this.game, 1200, 800, portal));
+            this.keyNeedsAdding = false;
+        }
+    }
+         // this.setMap(hospital);
+    ruins.setItems(ruinItems);
+   this.setMap(ruins);
+
+    // this.setItems(hospitalItems);
+
+    // this.addEntity(new Portal(this, 800, 600, hospital, 200, 200));
+
 	
 	var player = new playerControlled(this);
     player.controlled = true;
     this.addEntity(player);
+
+    // var player2 = new playerControlled(this);
+    // this.addEntity(player2);
 
     // var bossMap = new Map(this, ASSET_MANAGER.getAsset("./images/bossMap1.png"), "Boss Map - Level 1", 800, 800, 800, 800, 0.5);
     // bossMap.addVillain(new Boss(this));
@@ -427,7 +566,6 @@ GameEngine.prototype.startInput = function () {
         // adds the keycode key to the value in the array and sets it to false
         that.keyState[e.keyCode] = false;
     },false);
-
 }
 
 /**
@@ -442,6 +580,49 @@ GameEngine.prototype.addEntity = function (entity) {
 	if (entity.type === "item") this.items.push(entity);
     if (entity.type === "villain") this.villains.push(entity);
     if (entity.name === "playerControlled") this.players.push(entity);
+}
+
+/**
+ * Draws the Experience Bar
+ */
+GameEngine.prototype.drawExperience = function() {
+    this.ctx.beginPath();
+    this.ctx.fillStyle = "blue";
+    this.ctx.font = "bolder 20px Arial";
+    var message1 = "Level: " + this.level;
+    this.ctx.fillText(message1, this.surfaceWidth - 185 - 80, 30);
+    
+    
+
+    this.ctx.beginPath();
+    this.ctx.strokeStyle = "black";
+    this.ctx.fillStyle = "";
+    this.ctx.fillRect(this.surfaceWidth - 185, 10, 170, 25);
+
+    this.ctx.beginPath();
+    this.ctx.strokeStyle = "red";
+    this.ctx.fillStyle = "black";
+    this.ctx.fillRect(this.surfaceWidth - 180, 15, 160, 15);
+
+    var calculatewidth = this.expEarned / this.expToLevelUp;
+    this.ctx.beginPath();
+    this.ctx.strokeStyle = "blue";
+    this.ctx.fillStyle = "blue";
+    this.ctx.fillRect(this.surfaceWidth - 180, 15, 160 * calculatewidth, 15);
+    this.ctx.stroke(); 
+    this.ctx.restore();
+}
+
+/**
+ * Draws the kill score
+ */
+GameEngine.prototype.drawScore = function() {
+    // draws the number of kills onto the canvas
+    this.ctx.beginPath();
+    this.ctx.fillStyle = "Red";
+    this.ctx.font = "48px serif";
+    var message = "Kills: " + this.kills;
+    this.ctx.fillText(message, 10, 50);
 }
 
 /**
@@ -462,7 +643,7 @@ GameEngine.prototype.draw = function (top, left) {
     // Changed this.worldWidth and this.worldHeight from 1600 magic numbers
     // Changed this.surfaceWidth and this.surfaceHeight from 800 magic numbers
     // The forest level that is being drawn
-    this.ctx.drawImage(this.map.image, this.getWindowX() * this.map.ratio, this.getWindowY() * this.map.ratio, this.map.mapRatioWidth, this.map.mapRatioHeight, 0, 0, this.surfaceWidth, this.surfaceHeight);
+    this.ctx.drawImage(this.map.image, this.getWindowX() * this.map.ratioX, this.getWindowY() * this.map.ratioY, this.map.mapRatioWidth, this.map.mapRatioHeight, 0, 0, this.surfaceWidth, this.surfaceHeight);
 
 
 
@@ -484,15 +665,8 @@ GameEngine.prototype.draw = function (top, left) {
         this.entities[i].draw(this.ctx);
     }
 
-	// draws the number of kills onto the canvas
-    this.ctx.beginPath();
-    this.ctx.fillStyle = "Red";
-    this.ctx.font = "48px serif";
-    var message = "Kills: " + this.kills;
-    this.ctx.fillText(message, 10, 50);
-    this.ctx.stroke(); 
-	
-    this.ctx.restore();
+    this.drawScore();
+    this.drawExperience();
 }
 
 /**
@@ -533,13 +707,11 @@ GameEngine.prototype.update = function () {
     this.player = this.getPlayer();
 
     if(this.expToLevelUp <= this.expEarned){
+        this.gameRunning = false;
         ++this.level;
-        console.log("My level is " + this.level);
         this.expToLevelUp *= 2;
-        this.getPlayer().strength += 5;
-        this.getPlayer().maxHealth += 5;
-        this.getPlayer().maxSpeed += 5;
-        console.log(this.getPlayer().strength);
+        this.expEarned = 0;
+        this.attributePoints += 5;
     }
 
     // If the map is not a BossMap
@@ -598,17 +770,31 @@ GameEngine.prototype.update = function () {
 			this.entities.splice(i, 1);
         }
     }
-    // TODO remove these two arrays; we will not be using them anymore
+
+    // cycles through all the villains entities backwards
     for (var i = this.villains.length - 1; i >= 0; --i) {
         if (this.villains[i].removeFromWorld) {
+            var villain = this.villains[i];
+            this.lastVillainKilledX = villain.x - villain.radius - this.getWindowX();
+
+            this.lastVillainKilledY = villain.y - villain.radius - this.getWindowY();
             this.villains.splice(i, 1);
+
+
+            // this.movingAnimation.drawFrameRotate(this.game.clockTick, ctx, this.x - this.radius - this.game.getWindowX() - this.radialOffset, this.y - this.radius - this.game.getWindowY() - this.radialOffset, this.angle);
+
+
+            console.log(this.lastVillainKilledX);
+            console.log(this.lastVillainKilledY);
         }
     }
-    // for (var i = this.rocks.length - 1; i >= 0; --i) {
-        // if (this.rocks[i].removeFromWorld) {
-            // this.rocks.splice(i, 1);
-        // }
-    // }
+
+    // cycles through all the items entities backwards
+    for (var i = this.items.length - 1; i >= 0; --i) {
+        if (this.items[i].removeFromWorld) {
+            this.items.splice(i, 1);
+        }
+    }
 
     // this cycles through the player array backwards
     for (var i = this.players.length - 1; i >= 0; --i) {
@@ -632,7 +818,7 @@ GameEngine.prototype.update = function () {
         }
     }
 
-    // this cycles through the walls to check for collissions
+    // this cycles through the walls to check for collisions
     for (var i = 0; i < this.map.walls.length; i++) {
         // to draw them
         this.map.walls[i].update();
@@ -643,6 +829,23 @@ GameEngine.prototype.update = function () {
 		this.menuMode = "Lose";
 	}
 	
+}
+
+GameEngine.prototype.setItems = function(Items) {
+
+        // Removes all old items 
+       for (var i = 0; i < this.items.length; i++) {
+            // Sets the remove from world for all weapons to true
+            this.items[i].removeFromWorld = true;
+       }
+       // Sets all new items
+        for (var i = 0; i < Items.length; i++) {
+            console.log(Items[i].name);
+            // Sets the remove from world for all weapons to true
+            this.addEntity(Items[i]);
+            this.items.push(Items[i]);
+       }
+
 }
 
 
@@ -684,89 +887,237 @@ GameEngine.prototype.setMap = function(map, portal) {
         // Add Weapons from Map into the game
         this.addEntity(this.map.weapons[i]);
     }
+
+    this.setItems(this.map.items);
+}
+
+GameEngine.prototype.drawStory = function() {
+    if (this.storyClockTick === undefined) {
+        this.storyTimer = new Timer();
+        this.storyClockTick = 0;
+        this.storyClockSeconds = 0;
+        this.storyAlpha = [];
+        this.alpha1 = 0;
+        this.alpha2 = 0;
+        this.alpha3 = 0;
+        this.alpha4 = 0;
+        this.alpha5 = 0;
+    }
+    var previousStoryClockTick = this.storyClockTick;
+    this.storyClockTick += this.storyTimer.tick();
+    if (this.storyClockTick > this.storyClockSeconds) {
+        this.storyClockSeconds++;
+    }
+    var incrementTime = (this.storyClockTick - previousStoryClockTick) / 2;
+    var scene2 = 20;
+    var scene3 = 30;
+    var indent = 70;
+
+    this.skipIntroButton = {x:this.surfaceWidth - 100, y: this.surfaceHeight - 75, height:50, width:75};    
+
+    this.skipIntroButton.lines = ["Skip"];
+    this.drawButton(this.skipIntroButton, "transparent");
+
+    if (this.storyClockSeconds > 1) {
+        if (this.alpha1 < 1 && this.storyClockSeconds < scene2) {
+            this.alpha1 += incrementTime;
+        } else if (this.storyClockSeconds > scene2) {
+            this.alpha1 -= incrementTime;
+        }
+        this.drawMessage("It was a warm day when Tristan and his son, Danny, went on ", indent, 90, "rgba(0, 0, 0, " + this.alpha1 + ")");
+        this.drawMessage("their father-son fishing trip. In the early morning, they rested in", indent, 130, "rgba(0, 0, 0, " + this.alpha1 + ")");
+        this.drawMessage("their boat with their lines set, laughing and bonding. The sun ", indent, 170, "rgba(0, 0, 0, " + this.alpha1 + ")");
+        this.drawMessage("was shining, and the birds were singing. It was a perfect day.", 70, 210, "rgba(0, 0, 0, " + this.alpha1 + ")");
+    }
+    if (this.storyClockSeconds > 8) {
+        if (this.alpha2 < 1 && this.storyClockSeconds < scene2) {
+            this.alpha2 += incrementTime;
+        } else if (this.storyClockSeconds > scene2) {
+            this.alpha2 -= incrementTime;
+        }
+        // // Fade In
+        this.drawMessage("Too perfect...", 70, 255, "rgba(0, 0, 0, " + this.alpha2 + ")");
+    }
+    if (this.storyClockSeconds > 11) {
+        if (this.alpha3 < 1 && this.storyClockSeconds < scene2) {
+            this.alpha3 += incrementTime;
+        } else if (this.storyClockSeconds > scene2) {
+            this.alpha3 -= incrementTime;
+        }
+        // // Fade In 2
+        this.drawMessage("Something began to bother Tristan. His instincts for danger", 70, 300, "rgba(0, 0, 0, " + this.alpha3 + ")");
+        this.drawMessage("had been quite developed from his time as an Army Ranger. He", 70, 340, "rgba(0, 0, 0, " + this.alpha3 + ")");
+        this.drawMessage("could feel the hairs on the back of his neck stand. That’s", 70, 380, "rgba(0, 0, 0, " + this.alpha3 + ")");
+        this.drawMessage("when he saw the red wave of energy surging through the air;", 70, 420, "rgba(0, 0, 0, " + this.alpha3 + ")");
+        this.drawMessage(" he knew right away there was no escape. He reached out for", 70, 460, "rgba(0, 0, 0, " + this.alpha3 + ")");
+        this.drawMessage("Danny’s hand a moment too late. The energy rocked the water,", 70, 500, "rgba(0, 0, 0, " + this.alpha3 + ")");
+        this.drawMessage("flinging the boat high into the air.", 70, 540, "rgba(0, 0, 0, " + this.alpha3 + ")");
+    }
+    if (this.storyClockSeconds > scene2 + 2) {
+        if (this.alpha4 < 1 && this.storyClockSeconds < scene3) {
+            this.alpha4 += incrementTime;
+        }
+        this.drawMessage("Tristan felt the lake’s cold embrace take him under. A moment", 70, 90, "rgba(0, 0, 0, " + this.alpha4 + ")");
+        this.drawMessage("later, he felt a strike to the head, and the darkness took him.", 70, 130, "rgba(0, 0, 0, " + this.alpha4 + ")");
+        this.drawMessage("The next time he awoke, he found himself on the shore of the", 70, 170, "rgba(0, 0, 0, " + this.alpha4 + ")");
+        this.drawMessage("lake with Danny nowhere to be seen. For hour after hour,", 70, 210, "rgba(0, 0, 0, " + this.alpha4 + ")");
+        this.drawMessage("he searched with no luck.", 70, 250, "rgba(0, 0, 0, " + this.alpha4 + ")");
+    }
+    if (this.storyClockSeconds > scene2 + 6) {
+        if (this.alpha5 < 1 && this.storyClockSeconds < scene3) {
+            this.alpha5 += incrementTime;
+        }
+        this.drawMessage("Finally, he decided to make his way into the closest town,", 70, 310, "rgba(0, 0, 0, " + this.alpha5 + ")");
+        this.drawMessage("praying someone there could help him…", 70, 350, "rgba(0, 0, 0, " + this.alpha5 + ")");
+    }
+    if (this.alpha5 > 1) {
+        var width = 220;
+        var height = 50;
+        //startButton
+        this.beginButton = {x:this.ctx.canvas.width/2 - width/2, y: 390, height:height, width:width};    
+
+        this.beginButton.lines = ["Save Danny!"];
+        this.drawButton(this.beginButton);
+    }
+}
+GameEngine.prototype.drawStartMenu = function() {
+        var height = 50;
+        var width = 200;
+        
+        if (this.surfaceHeight == 600) {
+            this.drawMessage("Find the key after killing one of the zombies!", 150, 80);
+            this.drawMessage("Get through the first portal!", 250, 120);
+            this.drawMessage("Then get 20 kills, walk through the portal and kill the boss to win!", 40, 160);
+            this.drawMessage("Make sure to get the flamethrower before going through the portal!", 40, 200);
+
+            this.drawMessage("Walk with WASD", 305, 400);
+            this.drawMessage("Use mouse to rotate player", 265, 440);
+            this.drawMessage("Click mouse to shoot", 285, 480);        
+        } else {
+            this.drawMessage("Get 20 kills, walk through the portal and kill the boss to win!", 70, 288);
+            this.drawMessage("Make sure to get the flamethrower before going through the portal!", 40, 330);
+
+            this.drawMessage("Walk with WASD", 305, 490);
+            this.drawMessage("Use mouse to rotate player", 265, 540);
+            this.drawMessage("Click mouse to shoot", 285, 590);
+            
+        }
+        //startButton
+        this.startButton = {x:this.ctx.canvas.width/2 - width/2, y:this.ctx.canvas.height/2 - height/2, height:height, width:width};    
+
+        this.startButton.lines = ["New Game"];
+        this.drawButton(this.startButton);
+}
+
+GameEngine.prototype.drawPauseMenu = function() {
+    var height = 50;
+    var width = 200;
+        
+    //startButton
+    this.continueButton = {x:this.ctx.canvas.width/2 - width/2, y:this.ctx.canvas.height/2 - height/2, height:height, width:width}; 
+    this.continueButton.lines = ["Continue"];
+        
+    var buttX = this.continueButton.x;//this.ctx.canvas.width/2 - width/2; 
+    var buttY = this.continueButton.y + this.continueButton.height + 30;
+    this.startButton = {x:buttX, y:buttY, height:height, width:width};  
+    this.startButton.lines = ["New Game"];
+        
+    this.drawButton(this.continueButton);
+    this.drawButton(this.startButton);
+}
+
+GameEngine.prototype.drawLoseMenu = function() {
+    //console.log("lost game");
+    var width = 200;
+    var height = 400 - 100;
+    
+    if (this.surfaceHeight === 600) {
+        height -= 100;
+    } 
+    this.drawMessage ("GAME OVER", width + 127, height + 30);
+    this.drawMessage ("YOU LOST!", width + 135, height + 60);
+        
+    height = 50;
+    width = 200;
+        
+    //okButton
+    this.okButton = {x:this.ctx.canvas.width/2 - width/2, y:this.ctx.canvas.height/2 - height/2, height:height, width:width};   
+    this.okButton.lines = ["Ok"];
+    this.drawButton(this.okButton);
+}
+
+GameEngine.prototype.drawWinMenu = function() {
+    var width = 200;
+    var height = 400 - 100;
+    
+    if (this.surfaceHeight === 600) {
+        height -= 100;
+    }
+
+    this.drawMessage ("GAME OVER", width + 127, height + 30);
+    this.drawMessage ("You Win!!", width + 151, height + 60);
+        
+    height = 50;
+    width = 200;
+        
+    this.okButton = {x:this.ctx.canvas.width/2 - width/2, y:this.ctx.canvas.height/2 - height/2, height:height, width:width};   
+    this.okButton.lines = ["Ok"];
+    this.drawButton(this.okButton);
 }
 
 GameEngine.prototype.drawMenu = function() {
 	this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+
+    if (this.surfaceHeight == 600) {
+        this.ctx.drawImage(this.menuBackground, this.getWindowX(), this.getWindowY(), this.surfaceWidth, this.surfaceHeight, 0, 0, this.surfaceWidth, this.surfaceHeight);
+    }
+
 	if (this.menuMode == "Start") {
-		var height = 50;
-		var width = 200;
-		
-		//startButton
-		this.startButton = {x:this.ctx.canvas.width/2 - width/2, y:this.ctx.canvas.height/2 - height/2, height:height, width:width};	
-        this.drawMessage("Get 100 kills, walk through the portal and kill the boss to win!", 70, 288);
-        this.drawMessage("Make sure to get the flamethrower before going through the portal!", 40, 330);
-
-        this.startButton.lines = ["New Game"];
-
-		this.drawMessage("Walk with WASD", 305, 490);
-        this.drawMessage("Use mouse to rotate player", 265, 540);
-        this.drawMessage("Click mouse to shoot", 285, 590);
-		
-		this.drawButton(this.startButton);
+        this.drawStartMenu();
 	} else if (this.menuMode == "Pause") {
-		var height = 50;
-		var width = 200;
-		
-		//startButton
-		this.continueButton = {x:this.ctx.canvas.width/2 - width/2, y:this.ctx.canvas.height/2 - height/2, height:height, width:width};	
-		this.continueButton.lines = ["Continue"];
-		
-		var buttX = this.continueButton.x;//this.ctx.canvas.width/2 - width/2; 
-		var buttY = this.continueButton.y + this.continueButton.height + 30;
-		this.startButton = {x:buttX, y:buttY, height:height, width:width};	
-		this.startButton.lines = ["New Game"];
-		
-		this.drawButton(this.continueButton);
-		this.drawButton(this.startButton);
-		
+        this.drawPauseMenu();
 	} else if (this.menuMode == "Lose") {
-		//console.log("lost game");
-		var height = 200;
-		var width = this.ctx.canvas.width/2 - 100;
-		
-		this.drawMessage ("GAME OVER", height + 127, width + 30);
-		this.drawMessage ("you lost.", height + 161, width + 60);
-		
-		height = 50;
-		width = 200;
-		
-		//okButton
-		this.okButton = {x:this.ctx.canvas.width/2 - width/2, y:this.ctx.canvas.height/2 - height/2, height:height, width:width};	
-		this.okButton.lines = ["Ok"];
-		this.drawButton(this.okButton);
+        this.drawLoseMenu();
 	} else if (this.menuMode == "Win") {
-		
-		var height = 200;
-		var width = this.ctx.canvas.width/2 - 100;
-		
-		this.drawMessage ("GAME OVER", height + 127, width + 30);
-		this.drawMessage ("You Win!!", height + 151, width + 60);
-		
-		height = 50;
-		width = 200;
-		
-		//okButton
-		this.okButton = {x:this.ctx.canvas.width/2 - width/2, y:this.ctx.canvas.height/2 - height/2, height:height, width:width};	
-		this.okButton.lines = ["Ok"];
-		this.drawButton(this.okButton);
-	}	
-
+        this.drawWinMenu();
+	} else if (this.menuMode == "Storymode") {
+        this.drawStory();
+    }
 }
 
-GameEngine.prototype.drawMessage = function(messageToDraw, startX, startY) {
+GameEngine.prototype.drawMessage = function(messageToDraw, startX, startY, color, font) {
 		this.ctx.save();
-		this.ctx.fillStyle = "white";
-		this.ctx.font="25px Arial";
+        if (color === undefined) {
+            if (this.surfaceHeight === 600) {
+                this.ctx.fillStyle = "black";
+            } else {
+		        this.ctx.fillStyle = "white";
+            }
+        } else {
+            this.ctx.fillStyle = color;
+        }
+        if (font === undefined) {
+            if (this.surfaceHeight === 600) {
+                this.ctx.font = "24px Georgia";
+            } else {
+		        this.ctx.font="25px Arial";
+            }
+        } else {
+            this.ctx.font = font;
+        }
 
 		this.ctx.fillText(messageToDraw, startX, startY);
 }
 
-GameEngine.prototype.drawButton = function(buttonToDraw) {
+GameEngine.prototype.drawButton = function(buttonToDraw, fillColor, textColor) {
 	this.ctx.save();
 	
 	this.ctx.beginPath();
-    this.ctx.fillStyle = "blue";
+    if (fillColor === undefined) {
+        this.ctx.fillStyle = "blue";
+    } else {
+        this.ctx.fillStyle = fillColor;        
+    }
     this.ctx.fillRect(buttonToDraw.x, buttonToDraw.y, buttonToDraw.width, buttonToDraw.height);
     this.ctx.fill();
     this.ctx.closePath();
@@ -777,7 +1128,11 @@ GameEngine.prototype.drawButton = function(buttonToDraw) {
     this.ctx.stroke();
     this.ctx.closePath();
 	
-	this.ctx.fillStyle = "white";
+    if (textColor === undefined) {
+	   this.ctx.fillStyle = "white";
+    } else {
+        this.ctx.fillStyle = textColor;
+    }
 	this.ctx.font="25px Arial";
 
 	for (var i = 0; i < buttonToDraw.lines.length; i++) {
@@ -799,6 +1154,7 @@ GameEngine.prototype.drawButton = function(buttonToDraw) {
 }
 
 GameEngine.prototype.checkMenuClick = function (buttonToTest){
+    // console.log("X: " + this.click.canvasx + " | Y:" + this.click.canvasy);
 	return(this.click.canvasx >= buttonToTest.x && this.click.canvasx <= buttonToTest.x + buttonToTest.width && this.click.canvasy >= buttonToTest.y && this.click.canvasy <= buttonToTest.y + buttonToTest.height)
 }
 
@@ -842,7 +1198,11 @@ GameEngine.prototype.menuLoop = function () {
 				//console.log("should be starting");
 				this.restart();
 				document.getElementById('gameWorld').style.cursor = '';
-				this.menuMode = "Game";				
+                if (this.hasSeenIntro) {
+    				this.menuMode = "Game";
+                } else {
+                    this.menuMode = "Storymode";
+                }
 			}
 			// } else if (this.checkMenuClick(this.restartButton)){
 				// this.restart();
@@ -864,14 +1224,22 @@ GameEngine.prototype.menuLoop = function () {
 			if (this.checkMenuClick(this.okButton)){								
 				this.menuMode = "Start";
 			}
+        } else if (this.menuMode == "Intro") {
+
 		} else if (this.menuMode == "EndLevel") {
 			if (this.checkMenuClick(this.okButton)){
 				//increment level
 			}
-		}
+		} else if (this.menuMode == "Storymode") {
+            if ((this.beginButton && this.checkMenuClick(this.beginButton)) ||
+            (this.skipIntroButton && this.checkMenuClick(this.skipIntroButton))) {
+                this.menuMode = "Game";
+            }
+        }
 		
 	}
 	
+
 	// if (this.click != null) {
 		// //console.log(this.click);
 		// if (this.checkMenuClick(this.startButton)){
@@ -893,6 +1261,87 @@ GameEngine.prototype.menuLoop = function () {
     this.click = null; // resets the click to null
 }
 
+GameEngine.prototype.drawPlayerView = function(index, player) {
+
+    var borderWidth = 10;
+    var ctx = this.ctx;
+    var startX = (index + 1) * 25 + (index * (this.surfaceWidth / 3 - 20));
+    var startY = 25;
+    var width = this.surfaceWidth / 3 - 20;
+    var height = this.surfaceHeight - 200;
+
+    ctx.fillStyle = "#3a3a3a";
+    roundRect(ctx, startX - borderWidth, startY - borderWidth, width + borderWidth * 2, height + borderWidth * 2, 5, true, true);
+    
+    var ctx = this.ctx;
+    ctx.beginPath();
+    ctx.fillStyle = "#464646";
+    ctx.fillRect(startX, startY, width, height);
+    ctx.stroke();
+
+    var indent = startX + 20;
+    var currentHeight = startY + 30;
+    this.drawMessage(player.name, indent, currentHeight);
+    var canAddAttributePoints = this.attributePoints > 0;
+    var addColor = "#464646";
+    if (canAddAttributePoints) {
+        addColor = "green";
+    }
+
+    currentHeight += 50;
+
+    if (canAddAttributePoints) {
+        this.drawMessage("Points Available: +" + this.attributePoints, indent, currentHeight, "red", "20px Arial");
+    }
+
+    currentHeight += 50;
+    this.drawMessage("Strength " + player.strength, indent + 60, currentHeight);
+    this.addButtonStrength = {x: indent, y: currentHeight - 35, height: 50, width: 50};
+    this.addButtonStrength.lines = ["+"];
+    this.drawButton(this.addButtonStrength, addColor);
+    if (this.click && this.checkMenuClick(this.addButtonStrength) && canAddAttributePoints) {
+        this.attributePoints -= 1;
+        player.strength += 1;
+    }
+
+    currentHeight += 70;
+    this.drawMessage("Vitality " + player.vitality, indent + 60, currentHeight);
+    this.addButtonVitality = {x: indent, y: currentHeight - 35, height: 50, width: 50};
+    this.addButtonVitality.lines = ["+"];
+    this.drawButton(this.addButtonVitality, addColor);
+    if (this.click && this.checkMenuClick(this.addButtonVitality) && canAddAttributePoints) {
+        this.attributePoints -= 1;
+        player.vitality += 1;
+        player.health += 4;
+        player.healthMAX = player.vitality * 4;
+    }
+
+
+    currentHeight += 70;
+    this.drawMessage("Speed " + player.speed, indent + 60, currentHeight);
+    this.addButtonSpeed = {x: indent, y: currentHeight - 35, height: 50, width: 50};
+    this.addButtonSpeed.lines = ["+"];
+    this.drawButton(this.addButtonSpeed, addColor);
+    if (this.click && this.checkMenuClick(this.addButtonSpeed) && canAddAttributePoints) {
+        this.attributePoints -= 1;
+        player.speed += 1;
+        player.maxSpeed = player.speed * 4;
+    }
+
+
+    // this.addButtonVitality = {x:};
+    // this.addButtonSpeed = {x:};
+
+    //okButton
+    this.doneButton = {x:indent, y: startY + height - 60, height:50, width:200};   
+    this.doneButton.lines = ["Ok"];
+    this.drawButton(this.doneButton);
+    if (this.click && this.checkMenuClick(this.doneButton)) {
+        this.gameRunning = true;
+    }
+
+}
+
 /**
  * This loops through the game engine until the game ends
  */
@@ -907,20 +1356,20 @@ GameEngine.prototype.loop = function () {
 		this.ctx.lostfocus = "False";
 		//this.menuMode = "Pause";
 	}
-    this.clockTick = this.timer.tick(); // increments the clock tick
+    if (this.gameRunning) {
+        this.clockTick = this.timer.tick(); // increments the clock tick
 
-    this.update(); // updates the GameEngine and all the entities in the game
+        this.update(); // updates the GameEngine and all the entities in the game
 
-	this.draw(); // draws the GameEngine and all the entities in the game
-    this.click = null; // resets the click to null
-
-    if (this.kills > 99 && !this.unlocked) {
-            var bossMap = new Map(this, ASSET_MANAGER.getAsset("./images/bossMap1.png"), "Boss Map - Level 1", 800, 800, 800, 800, 0.5);
-            bossMap.addVillain(new Boss(this));
-            bossMap.isBossMap = true;
-            this.unlocked = true;
-            this.addEntity(new Portal(this, 94, 1186, bossMap, 700, 200));
+    	this.draw(); // draws the GameEngine and all the entities in the game
+    } else {
+        for (var i = 0; i < this.players.length; i++) {
+            this.drawPlayerView(i, this.players[i]);
+        }
     }
 
+    this.click = null; // resets the click to null
+
+    this.map.update();
 
 }

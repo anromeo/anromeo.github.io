@@ -30,7 +30,7 @@ Attracter.prototype.update = function () {
     for (var i = 0; i < this.game.entities.length; i++) {
         var other = this.game.entities[i];
 
-        var acceleration = 10000;
+        var acceleration = 1000;
 
         if (!other.isNonLiving && this.collide({
             x: other.x,
@@ -46,7 +46,6 @@ Attracter.prototype.update = function () {
                 var difY = (other.y - this.y) / dist;
                 other.velocity.x -= difX * acceleration / (dist * dist);
                 other.velocity.y -= difY * acceleration / (dist * dist);
-                console.log(other.name + " " + other.visualRadius);
                 // console.log("X: " + other.velocity.x + " | Y: " + other.velocity.y);
             }  
         }
