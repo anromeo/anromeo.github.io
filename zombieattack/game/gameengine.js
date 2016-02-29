@@ -73,8 +73,6 @@ function GameEngine() {
 
     this.surfaceWidth = null; // the width of the canvas
     this.surfaceHeight = null; // the height of the canvas
-	
-	this.backgroundaudio = new Audio("./sound/backgroundmusic1.mp3", "./sound/backgroundmusic1.ogg");
 
     this.attributePoints = 0;
     // FOREST MAP
@@ -195,8 +193,7 @@ GameEngine.prototype.start = function () {
             // TURN ON AGAIN!!
 		} else {//if (that.menuMode == "Start" || that.menuMode == "Pause") {
 			that.menuLoop();
-		}
-		that.backgroundaudio.play();		
+		}       
         requestAnimFrame(gameLoop, that.ctx.canvas); 
     })();
 }
@@ -1358,7 +1355,6 @@ GameEngine.prototype.loop = function () {
 	if (this.ctx.lostfocus == "True") {
 		//console.log("lostfocus");
 		this.ctx.lostfocus = "False";
-		this.backgroundaudio.pause();
 		//this.menuMode = "Pause";
 	}
     if (this.gameRunning) {
