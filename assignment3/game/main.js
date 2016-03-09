@@ -94,7 +94,6 @@ window.onload = function () {
 
         var gameEngine;
 
-        console.log("starting up da sheild");
         var canvas = document.getElementById('gameWorld');
         var ctx = canvas.getContext('2d');
 
@@ -157,7 +156,10 @@ window.onload = function () {
                             }
                         }
                         zom.game = null;
-                        zom.target = null;
+                        if (zom.target) {
+                            zom.target.game = null;
+                            zom.target.target = null;
+                        }
                         objectToSend.push(zom);
 
                     }
@@ -165,7 +167,6 @@ window.onload = function () {
                 socket.emit("save", { studentname: "Tony Zullo", statename: "awesomeState123", data: objectToSend });
                 socket.emit("load", { studentname: "Tony Zullo", statename: "awesomeState123"});
 
-                console.log(objectToSend);
                 this.textContent = "Play";
                 gameEngine.isPaused = true;
             }
