@@ -168,7 +168,7 @@ GameEngine.prototype.setupSounds = function () {
     // this.backgroundaudio.appendChild(source);
     source = document.createElement('source');
     source.type= 'audio/mpeg';
-    source.src= "./sound/fastfoot.mp3";
+    source.src= "./sound/FastFoot.mp3";
     //source.src= "./sound/backgroundmusic1.mp3";
     this.backgroundaudio.appendChild(source);
     //console.log(this.backgroundaudio);
