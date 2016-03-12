@@ -6,6 +6,7 @@
 // Source Used: http://jaran.de/goodbits/2011/07/17/calculating-an-intercept-course-to-a-target-with-constant-direction-and-velocity-in-a-2-dimensional-plane/
 
 function playerControlled(game) {
+	//console.log("building playerControlled");
     //LivingEntity.call(this, game, 0, 0, 0, 0, this.radius + Math.random() * (800 - this.radius * 2), this.radius + Math.random() * (800 - this.radius * 2));  
     // LivingEntity.call(this, game, game.surfaceWidth/2 * Math.random(), game.surfaceHeight/2 * Math.random());
 
@@ -23,7 +24,7 @@ function playerControlled(game) {
     this.spawnPoints[9] = { x: 136, y: 888 };
     this.spawnPoints[11] = { x: 664, y: 416 };
     this.spawnPoints[12] = { x: 190, y: 80 };
-    
+    this.movingAnimationImage = ASSET_MANAGER.getAsset("./images/shooter-walking2.png");
 
     var spawnpoint = this.spawnPoints[Math.floor(Math.random() * this.spawnPoints.length)];
 
@@ -36,19 +37,23 @@ function playerControlled(game) {
 
     this.SpriteWidth = 110;
     this.SpriteHeight = 176 / 3;
+    this.numberOfMovingAnimations = 8;
+    this.numberOfMovingAnimationsInRow = 3;
 
     this.radius = 30;
     this.controlled = false;
     this.action;
     this.weapon = null;
     this.game = game;
-    this.name = "playerControlled";
-    this.type = this.name;
+    this.name = "Shooter";
+    this.type = "playerControlled";
     this.color = "Black";
     this.team = "blue";
     this.shootingLine = true;
     this.angleOffset = 0;
     this.radialOffset = 15;
+    this.attackType = "range";
+    this.anglePlayerControlled = 100;
 
     this.cooldown = 0;
     this.randomLine = {x:0, y:0};
@@ -56,7 +61,7 @@ function playerControlled(game) {
     this.linecooldownstart = .002;
     this.cooldownStartControlled = .45;
     this.cooldownStartNotControlled = .75;
-    this.angleOffset =  290;
+    this.angleOffset =  60;
     //this.corners = [{x:0, y:0}, {x:800, y:0}, {x:0, y:800}, {x:800, y:800}]
     this.CenterOffsetX = 10; // puts the center of the sprite in the center of the entity
     this.CenterOffsetY = 10; // puts the center of the sprite in the center of the entity
@@ -66,12 +71,30 @@ function playerControlled(game) {
     this.velocity = { x: 0, y: 0 };
 
     this.ability1Attributes.activate = false;
+    this.ability2Attributes.activate = false;
+
+
+    this.ability1Attributes.on = true;
+    this.ability2Attributes.on = true;
+
+    this.ability1PictureInactive = ASSET_MANAGER.getAsset("./images/shooter-ability1-inactive.png");
+    this.ability1PictureActive = ASSET_MANAGER.getAsset("./images/shooter-ability1.png");
+
+
+    this.ability2PictureActive = ASSET_MANAGER.getAsset("./images/shooter-ability2.png");
+    this.ability2PictureInactive = ASSET_MANAGER.getAsset("./images/shooter-ability2-inactive.png");
+
+    this.ability2Attributes.cooldown = 1;
+    this.ability2Attributes.maxCooldown = 1;
+
+    // this.ability3PictureInactive = ;
+    // this.ability3PictureActive = ;
 
   //  this.maxSpeed = 200;
 
-    this.speed = 30;
+    this.speed = 25;
     this.vitality = 25;
-    this.strength = 25;
+    this.strength = 30;
 
     this.maxSpeed = this.speed * 4;
     this.healthMAX = this.vitality * 4;
@@ -80,6 +103,7 @@ function playerControlled(game) {
     this.originalSpeed = 100;
 
     this.currentAbility = 1;
+    this.inplay = false;
 };
 
 playerControlled.prototype = new LivingEntity();
@@ -101,8 +125,10 @@ playerControlled.prototype.attack = function(target) {
     var shot;
     if (this.weapon === "FlameThrower") {
         shot = new Flame(this.game, this, dir);
+		this.game.flameaudio.play();
     } else {
         shot = new Projectile(this.game);
+		this.game.gunaudio.play();
     }
     shot.strength += this.strength;
     shot.maxSpeed = this.maxSpeed * 2;
@@ -149,17 +175,33 @@ playerControlled.prototype.swapIfCanSwap = function(game) {
         && game.players[indexOfSwappingPlayerControlled]
         && !game.players[indexOfSwappingPlayerControlled].controlled) {
 
+        game.players[indexOfSwappingPlayerControlled].x = this.game.getPlayer().x;
+        game.players[indexOfSwappingPlayerControlled].canvasX = this.game.getPlayer().canvasX;
+        game.players[indexOfSwappingPlayerControlled].y = this.game.getPlayer().y;
+        game.players[indexOfSwappingPlayerControlled].canvasY = this.game.getPlayer().canvasY;
+
+        this.game.getPlayer.x = -100000;
+        this.game.getPlayer().canvasX = -100000;
+        this.game.getPlayer().y = -10000;
+        this.game.getPlayer().canvasY = -100000;
         // for every playerControlled object of the gameWipes away the control for all playerControlled Objects of the game
         for(var i = 0; i < game.players.length; i++) {
             // Wipes away the control for all playerControlled Objects of the game
             game.players[i].controlled = false;
+            game.players[i].inplay = false;
         }
         // sets the current controls of the pressed number to controlled
         game.players[indexOfSwappingPlayerControlled].controlled = true;
+        game.players[indexOfSwappingPlayerControlled].inplay = true;
+        this.game.restoreSpeeds();
     }
 }
 
 playerControlled.prototype.selectAction = function () {
+    if (this.frozen) {
+        return;
+    }
+
     if (!this.controlled) {
         return this.aiSelectAction(this.name);
     }
@@ -171,7 +213,6 @@ playerControlled.prototype.selectAction = function () {
         if (this.game.keyState) {
             var x = 0;
             var y = 0;
-
             // If the player has pressed a key '1' to '9' then swap players if
             // the other player exists
             this.swapIfCanSwap(this.game);            
@@ -203,14 +244,12 @@ playerControlled.prototype.selectAction = function () {
             }  
             
             if (this.game.keyState[32]) {
-                switch (this.currentAbility) {
-                    case 1: this.ability1Attributes.activate = true;
-                    break
-                    case 2: ;
-                    break;
-                    case 3: ;
-                    break;
-                }
+                this.ability2Attributes.activate = true;
+                this.currentAbility = 2;
+            }
+            if (this.game.keyState[16]) {
+                this.ability1Attributes.activate = true;
+                this.currentAbility = 1;
             }
             action.direction.x += (x) * acceleration;
             action.direction.y += (y) * acceleration;
@@ -222,7 +261,10 @@ playerControlled.prototype.selectAction = function () {
             action.target = this.game.mouse;
             action.willAttack = true;
             //this.game.click = null;
-        }
+        } else {
+			this.game.gunaudio.pause();
+			this.game.flameaudio.pause();
+		}
       
         return action;
     }
@@ -345,25 +387,25 @@ playerControlled.prototype.selectAction = function () {
 playerControlled.prototype.ability1 = function(entity) {
     console.log("Speeding up");
     entity.upSpeed();
-    if (!this.originalCooldownStartControlled) {
-        this.originalCooldownStartControlled = this.cooldownStartControlled;
-        this.originalCooldownStartNotControlled = this.cooldownStartNotControlled;
+    if (!entity.originalCooldownStartControlled) {
+        entity.originalCooldownStartControlled = entity.cooldownStartControlled;
+        entity.originalCooldownStartNotControlled = entity.cooldownStartNotControlled;
     }
-    this.cooldownStartControlled = this.cooldownStartControlled / 2;
-    this.originalCooldownStartNotControlled = this.originalCooldownStartNotControlled / 2;
+    entity.cooldownStartControlled = entity.cooldownStartControlled / 2;
+    entity.originalCooldownStartNotControlled = entity.originalCooldownStartNotControlled / 2;
 
 }
 
 playerControlled.prototype.ability2 = function(entity) {
     console.log("Dropping Bomb");
+    entity.game.addEntity(new Landmine(entity.game, entity.x, entity.y, entity.team));
 }
 
-playerControlled.prototype.ability3 = function(entity) {
-    console.log("Dropping Bomb");
-}
+// playerControlled.prototype.ability3 = function(entity) {
+//     console.log("Dropping Bomb");
+// }
 
 playerControlled.prototype.update = function () {
-
 
     if (this.timerForSpeed) {
         if (this.timerForSpeed <= 0) {
@@ -460,77 +502,8 @@ playerControlled.prototype.update = function () {
         this.y += this.velocity.y * this.game.clockTick;
     }
 
-    // Removed by Vlad, stupid loop makes the game crash
-
-    // for (var i = 0; i < this.game.entities.length; i++) {
-    //     var ent = this.game.entities[i];
-    //     if (ent !== this && this.collide(ent)) {
-    //         if (ent.name !== "Zombie" && ent.name !== "Rock" && ent.name !== "NonLiving") {
-    //             var temp = { x: this.velocity.x, y: this.velocity.y };
-    //             var dist = distance(this, ent);
-    //             var delta = this.radius + ent.radius - dist;
-
-    //             if (dist) {
-    //                 var difX = (this.x - ent.x) / dist;
-    //                 var difY = (this.y - ent.y) / dist;
-
-
-    //                 this.x += difX * delta / 2;
-    //                 this.y += difY * delta / 2;
-    //                 ent.x -= difX * delta / 2;
-    //                 ent.y -= difY * delta / 2;
-
-    //                 this.velocity.x = ent.velocity.x * friction;
-    //                 this.velocity.y = ent.velocity.y * friction;
-    //                 ent.velocity.x = temp.x * friction;
-    //                 ent.velocity.y = temp.y * friction;
-    //                 this.x += this.velocity.x * this.game.clockTick;
-    //                 this.y += this.velocity.y * this.game.clockTick;
-    //                 ent.x += ent.velocity.x * this.game.clockTick;
-    //                 ent.y += ent.velocity.y * this.game.clockTick;
-    //             }
-    //         }
-    //         // if (ent.name === "Rock" && this.rocks < 2) {
-    //             // this.rocks++;
-    //             // ent.removeFromWorld = true;
-    //         // }
-    //     }
-    // }
-
-    // for (var i = 0; i < this.game.entities.length; i++) {
-    //     var ent = this.game.entities[i];
-    //     if (ent !== this && this.collide(ent)) {
-    //         if (ent.name !== "Zombie" && ent.name !== "Rock" && ent.name !== "NonLiving") {
-    //             var temp = { x: this.velocity.x, y: this.velocity.y };
-    //             var dist = distance(this, ent);
-    //             var delta = this.radius + ent.radius - dist;
-    //             var difX = (this.x - ent.x) / dist;
-    //             var difY = (this.y - ent.y) / dist;
-
-    //             this.x += difX * delta / 2;
-    //             this.y += difY * delta / 2;
-    //             ent.x -= difX * delta / 2;
-    //             ent.y -= difY * delta / 2;
-
-    //             this.velocity.x = ent.velocity.x * friction;
-    //             this.velocity.y = ent.velocity.y * friction;
-    //             ent.velocity.x = temp.x * friction;
-    //             ent.velocity.y = temp.y * friction;
-    //             this.x += this.velocity.x * this.game.clockTick;
-    //             this.y += this.velocity.y * this.game.clockTick;
-    //             ent.x += ent.velocity.x * this.game.clockTick;
-    //             ent.y += ent.velocity.y * this.game.clockTick;
-    //         }
-    //         // if (ent.name === "Rock" && this.rocks < 2) {
-    //             // this.rocks++;
-    //             // ent.removeFromWorld = true;
-    //         // }
-    //     }
-    // }
-
-    
-    var rock;
     var flame;
+
     // if (!this.controlled) {
     //     console.log(this.action);
     // }
@@ -576,7 +549,7 @@ playerControlled.prototype.update = function () {
 
     if (this.action.target) {
         this.angle = Math.atan2(this.action.target.x, this.action.target.y) * (180/Math.PI);
-        this.angle = this.angle - 100;
+        this.angle = this.angle - this.anglePlayerControlled;
         //console.log(this.angle);
         while (this.angle > 360) {
             this.angle = this.angle - 360;
@@ -599,7 +572,7 @@ playerControlled.prototype.update = function () {
        ///  console.log(this.movingAnimation.frames);
        //  this.movingAnimation.setFrames(1);
 //          console.log("standing");
-         this.movingAnimation = new Animation(ASSET_MANAGER.getAsset("./images/shooter-walking2.png"), this.SpriteWidth, this.SpriteHeight, .09, 8, true, false, 3);
+         this.movingAnimation = new Animation(this.movingAnimationImage, this.SpriteWidth, this.SpriteHeight, .09, this.numberOfMovingAnimations, true, false, this.numberOfMovingAnimationsInRow);
      } else {
        // console.log("walking");
         // this.setMovingAnimation(ASSET_MANAGER.getAsset("./images/shooter-walking2.png"), this.SpriteWidth, this.SpriteHeight, .09, 8, true, false, 3);
@@ -619,9 +592,67 @@ playerControlled.prototype.draw = function (ctx) {
     if (this.controlled) {
         this.game.setWindowX(this.x - 400);
         this.game.setWindowY(this.y - 400);
+		//resets the mouse as we scroll
+        this.game.mouse.x =  this.game.mouse.canvasx - this.game.ctx.canvas.getBoundingClientRect().left + this.game.getWindowX();
+        this.game.mouse.y = this.game.mouse.canvasy - this.game.ctx.canvas.getBoundingClientRect().top + this.game.getWindowY();
+		
+		this.game.x = this.game.mouse.x;
+		this.game.y = this.game.mouse.y;
+        // console.log("X " + this.game.x);
+        // console.log("Y " + this.game.y);
     }
-//    console.log("X: " + this.x + " | Y: " + this.y);
+    
+    if (this.timerForSpeed) {
+        if (this.trail === undefined) {
+            this.trail = 2;
+        }
 
+        if (this.trail < 0) {
+            this.trail = 2;
+        } else {
+            this.trail -= this.game.timer.tick();
+        }
+        ctx.beginPath();
+        ctx.strokeStyle = "lightblue";
+        ctx.lineWidth = this.trail * 1;
+        var x = this.canvasX;
+        var y = this.canvasY;
+
+        ctx.moveTo(
+                x,
+                y);
+        ctx.lineTo(
+                (x - (this.velocity.x / (this.trail + 1))),
+                (y - (this.velocity.y / (this.trail + 1))));
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.strokeStyle = "lightblue";
+        ctx.lineWidth = this.trail * 1;
+        ctx.moveTo(
+                x + this.radius / 4,
+                y + this.radius / 4);
+        ctx.lineTo(
+                (x - (this.velocity.x / (this.trail + 1)) + this.radius / 4),
+                (y - (this.velocity.y / (this.trail + 1))) + this.radius / 4);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.strokeStyle = "lightblue";
+        ctx.lineWidth = this.trail * 1;
+        ctx.moveTo(
+                x - this.radius / 4,
+                y - this.radius / 4);
+        ctx.lineTo(
+                (x - (this.velocity.x / (this.trail + 1)) - this.radius / 4),
+                (y - (this.velocity.y / (this.trail + 1))) - this.radius / 4);
+        ctx.stroke();
+
+        ctx.lineWidth = 1;
+    }
+    // if (this.controlled) {
+        // console.log("X: " + this.x + " | Y: " + this.y);
+    // }
     // ctx.beginPath();
     // ctx.fillStyle = this.color;
     // ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
@@ -636,15 +667,22 @@ playerControlled.prototype.draw = function (ctx) {
     // ctx.closePath();
 
         //shooting line
-    if (this.game.mouse && this.shootingLine && this.controlled) {
+    if (this.game.mouse && this.shootingLine && this.controlled && this.name != "Angel") {
         ctx.beginPath();
 		        // var lineBeginX = this.canvasX + this.radius;
         // var lineBeginY = this.canvasY + this.radius;
 		var lineBeginX = this.canvasX;
         var lineBeginY = this.canvasY;
+		// var dist = distance(this, this.game.mouse);
+		// console.log(dist);
+		// var dir = direction(this, this.game.mouse);
+		// console.log(dir.x * dist);
+		// console.log(dir.y * dist);
+		// var lineEndX = this.canvaseX + (dir.x * dist);
+        // var lineEndY = this.canvaseX + (dir.y * dist);
         var lineEndX = this.game.mouse.canvasx;
         var lineEndY = this.game.mouse.canvasy;
-        ctx.strokeStyle = "pink";
+        ctx.strokeStyle = "red";
         ctx.moveTo(lineBeginX,lineBeginY);
         ctx.lineTo(lineEndX, lineEndY);
         ctx.stroke();
@@ -662,7 +700,7 @@ playerControlled.prototype.draw = function (ctx) {
     }
 
 
-    if (this.game.mouse && this.game.mouse.mousedown && this.controlled) {
+    if (this.game.mouse && this.game.mouse.mousedown && this.controlled && this.name != "Angel") {
         ctx.beginPath();
         // var lineBeginX = this.canvasX + this.radius;
         // var lineBeginY = this.canvasY + this.radius;
@@ -680,6 +718,17 @@ playerControlled.prototype.draw = function (ctx) {
         //console.log(window);
     }
     
+
+    if (this.game.aura && this.name === "Angel") {
+        ctx.beginPath();
+        ctx.strokeStyle = this.game.aura;
+        ctx.lineWidth = 3;
+        ctx.arc(this.canvasX, this.canvasY, this.radius + this.game.halo, 0, Math.PI * 2, false);
+        ctx.arc(this.canvasX, this.canvasY, this.radius + this.game.halo - 6, 0, Math.PI * 2, false);
+        ctx.closePath();
+        ctx.stroke();
+        ctx.lineWidth = 1;
+    }
         //this.angle = Math.atan2(this.action.target.x, this.action.target.y) * (180/Math.PI);
     // this.angle = Math.atan2(this.game.y - this.y, this.game.x - this.x) * (180/Math.PI);
     // var dir = direction(this.mouse, this);

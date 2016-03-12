@@ -36,7 +36,7 @@ function Boss(game, x, y) {
     this.attackRange = 50; // always make sure attack range is larger than comfort zone
     this.comfortZone = 25;
     this.angleOffset = 270;
-    this.cooldown = 1;
+    this.cooldown = 4;
     this.exp = 10;
 
     this.ability1Attributes.cooldown = 4;
@@ -52,7 +52,7 @@ Boss.prototype.ability1 = function(entity) {
     entity.maxSpeed *= 4;
     entity.movingAnimation.originalFrameDuration = entity.movingAnimation.frameDuration;
     entity.movingAnimation.frameDuration = entity.movingAnimation.frameDuration;
-    entity.ability1Timer = 2;
+    entity.ability1Timer = .5;
 }
 
 Boss.prototype.ability2 = function(entity) {
@@ -75,8 +75,95 @@ Boss.prototype.draw = function(ctx) {
     LivingEntity.prototype.draw.call(this, ctx);
 }
 
+Boss.prototype.summonSkeletons = function() {
+    this.aiUpdate("zombie");
+    if (this.frozen) {
+        return;
+    }
+
+    if (this.ability3Timer >= 4) {
+        this.healingCircle -= this.game.clockTick;
+        this.ability3Timer -= this.game.clockTick;
+        this.velocity.x = 0;
+        this.velocity.y = 0;
+    } else {
+        this.ability3Timer = false;
+        this.healingCircle = false;
+    }
+
+    if (this.ability2Timer) {
+        if (this.ability2Timer >= 0) {
+            this.ability2Timer -= this.game.clockTick;
+            if (this.ability2Check > this.ability2Timer) {
+                this.ability2Check -= 2;
+                var villain = new Skeleton(this.game, this.x + this.velocity.x, this.y + this.velocity.y);
+                this.game.addEntity(villain);
+            }
+            this.velocity.x = 0;
+            this.velocity.y = 0;
+        } else {
+            this.ability2Timer = false;
+        }
+    }
+
+    if (this.ability1Timer) {
+        if (this.ability1Timer <= 0) {
+            this.ability1Timer = false;
+            this.maxSpeed = this.originalMaxSpeed;
+            this.movingAnimation.frameDuration = this.movingAnimation.originalFrameDuration;
+        } else {
+            this.ability1Timer -= this.game.clockTick;
+        }
+    }
+}
+
+Boss.prototype.summonSpiders = function() {
+    this.aiUpdate("zombie");
+    if (this.frozen) {
+        return;
+    }
+
+    if (this.ability3Timer >= 4) {
+        this.healingCircle -= this.game.clockTick;
+        this.ability3Timer -= this.game.clockTick;
+        this.velocity.x = 0;
+        this.velocity.y = 0;
+    } else {
+        this.ability3Timer = false;
+        this.healingCircle = false;
+    }
+
+    if (this.ability2Timer) {
+        if (this.ability2Timer >= 0) {
+            this.ability2Timer -= this.game.clockTick;
+            if (this.ability2Check > this.ability2Timer) {
+                this.ability2Check -= 2;
+                var villain = new Spider(this.game, this.x + this.velocity.x, this.y + this.velocity.y);
+                this.game.addEntity(villain);
+            }
+            this.velocity.x = 0;
+            this.velocity.y = 0;
+        } else {
+            this.ability2Timer = false;
+        }
+    }
+
+    if (this.ability1Timer) {
+        if (this.ability1Timer <= 0) {
+            this.ability1Timer = false;
+            this.maxSpeed = this.originalMaxSpeed;
+            this.movingAnimation.frameDuration = this.movingAnimation.originalFrameDuration;
+        } else {
+            this.ability1Timer -= this.game.clockTick;
+        }
+    }
+}
+
 Boss.prototype.update = function() {
     this.aiUpdate("zombie");
+    if (this.frozen) {
+        return;
+    }
 
     if (this.ability3Timer >= 4) {
         this.healingCircle -= this.game.clockTick;

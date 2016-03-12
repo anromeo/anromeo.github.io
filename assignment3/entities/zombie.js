@@ -22,6 +22,7 @@ function Zombie(game, clone) {
         this.deathTimer = clone.deathTimer;
 
         this.velocity = clone.velocity;
+        this.target = clone.target;
     } else {
 
         LivingEntity.call(this, game, this.radius + Math.random() * (800 - this.radius * 2) * -1, this.radius + Math.random() * (800 - this.radius * 2) * -1, this.radius + Math.random() * (800 - this.radius * 2) * -1, this.radius + Math.random() * (800 - this.radius * 2) * -1, this.radius + Math.random() * (800 - this.radius * 2) * -1, this.radius + Math.random() * (800 - this.radius * 2) * -1);
