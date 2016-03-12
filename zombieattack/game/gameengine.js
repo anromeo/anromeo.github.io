@@ -789,7 +789,7 @@ GameEngine.prototype.setupMaps = function () {
                     this.game.map.dialogue.push(new Dialogue(this, "Tristan", "Alright, Angelface, I'm going to trust you for now", "./images/tristan.png", 4));
                     this.game.map.dialogue.push(new Dialogue(this, "Gabrielle", "There is a portal. We must get to it.", "./images/Gabrielle.png", 4, true));
                     this.game.map.dialogue.push(new Dialogue(this, "NEW PARTY MEMBER ADDED", "Swap between party members by pressing 1 or 2.", null, 4, "gameMessage"));
-                    this.game.map.dialogue.push(new Dialogue(this, "NEW PARTY MEMBER ADDED", "Angel has attack and health halo's that help her to hurt and heal.", null, 4, "gameMessage"));
+                    this.game.map.dialogue.push(new Dialogue(this, "NEW PARTY MEMBER ADDED", "Angel has attack and health halos that help her to hurt and heal.", null, 4, "gameMessage"));
 
                     this.game.addEntity(new Angel(this.game));
                     this.game.map.drawDialogue = true;
