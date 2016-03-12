@@ -48,11 +48,11 @@ function GameEngine() {
     // Entities of the Game
     this.entities = []; // All entities of the game
     this.weapons = []; // All the weapons of the game
-	this.items = [];
+    this.items = [];
     this.villains = []; // All the Zombies | TODO ? Get rid or change ?
     this.players = []; // All the Players | TODO ? Get rid or change ?
     this.gameRunning = true;
-	this.musicPlaying = true;
+    this.musicPlaying = true;
     this.deadPlayers = [];
 
     // This is the x and y of the game, they control the rotation of the player
@@ -60,19 +60,19 @@ function GameEngine() {
     this.y;
 
     this.map = null;
-	//this.menuMode = "Game";
-	this.menuMode = "Start";
+    //this.menuMode = "Game";
+    this.menuMode = "Start";
     this.hasSeenIntro = false;
 
     this.zombieCooldownNumInitial = 3;  // how often a zombie will appear initially
     this.zombieCooldown = this.zombieCooldownNumInitial; // the cooldown until the next zombie appears
-	
-	
-	this.spiderCooldownNumInitial = 2; // how often a spider will appear
-	this.spiderCooldown = this.zombieCooldownNumInitial; // the cooldown until the next spider appears
-	
-	this.skeletonCooldownNumInitial = 4; // how often a skeleton will appear
-	this.skeletonCooldown = this.zombieCooldownNumInitial; // the cooldown until the next skeleton appears
+    
+    
+    this.spiderCooldownNumInitial = 2; // how often a spider will appear
+    this.spiderCooldown = this.zombieCooldownNumInitial; // the cooldown until the next spider appears
+    
+    this.skeletonCooldownNumInitial = 4; // how often a skeleton will appear
+    this.skeletonCooldown = this.zombieCooldownNumInitial; // the cooldown until the next skeleton appears
 
     this.kills = 0; // this is the number of kills that the player has total
 
@@ -85,18 +85,18 @@ function GameEngine() {
     this.surfaceWidth = null; // the width of the canvas
     this.surfaceHeight = null; // the height of the canvas
 
-	// var source= document.createElement('source');
-	// source.type= 'audio/ogg';
-	// source.src= "./sound/backgroundmusic1.ogg";
-	// this.backgroundaudio.appendChild(source);
-	// source= document.createElement('source');
-	// source.type= 'audio/mpeg';
-	// source.src= "./sound/fastfoot.mp3";
-	// this.backgroundaudio.appendChild(source);
+    // var source= document.createElement('source');
+    // source.type= 'audio/ogg';
+    // source.src= "./sound/backgroundmusic1.ogg";
+    // this.backgroundaudio.appendChild(source);
+    // source= document.createElement('source');
+    // source.type= 'audio/mpeg';
+    // source.src= "./sound/fastfoot.mp3";
+    // this.backgroundaudio.appendChild(source);
  //    console.log(this.backgroundaudio);
-	this.setupSounds();
+    this.setupSounds();
 
-	
+    
     this.attributePoints = 0;
     // FOREST MAP
     // this.worldWidth = 1600; // the width of the world within the canvas FOREST
@@ -157,65 +157,65 @@ GameEngine.prototype.restoreSpeeds = function () {
     }
 }
 GameEngine.prototype.setupSounds = function () {
-	this.backgroundaudio = new Audio();
-	//console.log(this.backgroundaudio);
-	this.backgroundaudio.loop = true;
-	this.backgroundaudio.preload = "auto";
-
-	// var source= document.createElement('source');
-	// source.type= 'audio/ogg';
-	// source.src= "./sound/backgroundmusic1.ogg";
-	// this.backgroundaudio.appendChild(source);
-	source = document.createElement('source');
-	source.type= 'audio/mpeg';
-	source.src= "./sound/fastfoot.mp3";
-	//source.src= "./sound/backgroundmusic1.mp3";
-	this.backgroundaudio.appendChild(source);
+    this.backgroundaudio = new Audio();
     //console.log(this.backgroundaudio);
-	
-	this.gunaudio = new Audio();
-	//console.log(this.backgroundaudio);
-	this.gunaudio.loop = true;
-	this.gunaudio.preload = "auto";	
-	sourceGunAudio = document.createElement('source');
-	sourceGunAudio.type= 'audio/mpeg';
-	sourceGunAudio.src= "./sound/MachineGun3.mp3";
-	//sourceGunAudio.src= "./sound/GunShot.mp3";
-	this.gunaudio.appendChild(sourceGunAudio);
-	//this.gunaudio.pause();
-	
-	this.flameaudio = new Audio();
-	this.flameaudio.loop = true;
-	this.flameaudio.preload = "auto";	
-	sourceflameaudio = document.createElement('source');
-	sourceflameaudio.type= 'audio/mpeg';
-	sourceflameaudio.src= "./sound/Firestrm.mp3";
-	this.flameaudio.appendChild(sourceflameaudio);
-	//this.gunaudio.pause();
-	
-	this.explosionaudio = new Audio();
-	this.explosionaudio.loop = false;
-	this.explosionaudio.preload = "auto";	
-	sourceexplosionaudio = document.createElement('source');
-	sourceexplosionaudio.type= 'audio/mpeg';
-	sourceexplosionaudio.src= "./sound/Explosion.mp3";
-	this.explosionaudio.appendChild(sourceexplosionaudio);
-	
-	this.endaudio = new Audio();
-	this.endaudio.loop = false;
-	this.endaudio.preload = "auto";	
-	sourceendaudio = document.createElement('source');
-	sourceendaudio.type= 'audio/mpeg';
-	sourceendaudio.src= "./sound/wickedmalelaugh1.mp3";
-	this.endaudio.appendChild(sourceendaudio);
-	
-	this.winaudio = new Audio();
-	this.winaudio.loop = false;
-	this.winaudio.preload = "auto";	
-	sourcewinaudio = document.createElement('source');
-	sourcewinaudio.type= 'audio/mpeg';
-	sourcewinaudio.src= "./sound/whahoo.mp3";
-	this.winaudio.appendChild(sourcewinaudio);
+    this.backgroundaudio.loop = true;
+    this.backgroundaudio.preload = "auto";
+
+    // var source= document.createElement('source');
+    // source.type= 'audio/ogg';
+    // source.src= "./sound/backgroundmusic1.ogg";
+    // this.backgroundaudio.appendChild(source);
+    source = document.createElement('source');
+    source.type= 'audio/mpeg';
+    source.src= "./sound/fastfoot.mp3";
+    //source.src= "./sound/backgroundmusic1.mp3";
+    this.backgroundaudio.appendChild(source);
+    //console.log(this.backgroundaudio);
+    
+    this.gunaudio = new Audio();
+    //console.log(this.backgroundaudio);
+    this.gunaudio.loop = true;
+    this.gunaudio.preload = "auto"; 
+    sourceGunAudio = document.createElement('source');
+    sourceGunAudio.type= 'audio/mpeg';
+    sourceGunAudio.src= "./sound/MachineGun3.mp3";
+    //sourceGunAudio.src= "./sound/GunShot.mp3";
+    this.gunaudio.appendChild(sourceGunAudio);
+    //this.gunaudio.pause();
+    
+    this.flameaudio = new Audio();
+    this.flameaudio.loop = true;
+    this.flameaudio.preload = "auto";   
+    sourceflameaudio = document.createElement('source');
+    sourceflameaudio.type= 'audio/mpeg';
+    sourceflameaudio.src= "./sound/Firestrm.mp3";
+    this.flameaudio.appendChild(sourceflameaudio);
+    //this.gunaudio.pause();
+    
+    this.explosionaudio = new Audio();
+    this.explosionaudio.loop = false;
+    this.explosionaudio.preload = "auto";   
+    sourceexplosionaudio = document.createElement('source');
+    sourceexplosionaudio.type= 'audio/mpeg';
+    sourceexplosionaudio.src= "./sound/Explosion.mp3";
+    this.explosionaudio.appendChild(sourceexplosionaudio);
+    
+    this.endaudio = new Audio();
+    this.endaudio.loop = false;
+    this.endaudio.preload = "auto"; 
+    sourceendaudio = document.createElement('source');
+    sourceendaudio.type= 'audio/mpeg';
+    sourceendaudio.src= "./sound/wickedmalelaugh1.mp3";
+    this.endaudio.appendChild(sourceendaudio);
+    
+    this.winaudio = new Audio();
+    this.winaudio.loop = false;
+    this.winaudio.preload = "auto"; 
+    sourcewinaudio = document.createElement('source');
+    sourcewinaudio.type= 'audio/mpeg';
+    sourcewinaudio.src= "./sound/whahoo.mp3";
+    this.winaudio.appendChild(sourcewinaudio);
 }
 
 /**
@@ -289,40 +289,40 @@ GameEngine.prototype.setWindowY = function(y) {
 GameEngine.prototype.init = function (ctx) {
 
     this.ctx = ctx; // this adds the ctx object to the Game Engine
-	this.ctx.lostfocus = "False"; //used when detecting if game lost focus.
+    this.ctx.lostfocus = "False"; //used when detecting if game lost focus.
     window.onblur = function detectLostFocus() { this.document.getElementById('gameWorld').getContext('2d').lostfocus = "True";}
-	
-	this.surfaceWidth = this.ctx.canvas.width; // this sets the surfaceWidth to the canvas width
+    
+    this.surfaceWidth = this.ctx.canvas.width; // this sets the surfaceWidth to the canvas width
     this.surfaceHeight = this.ctx.canvas.height; // this sets the surfaceHeight to the canvas height 
 
     this.startInput();
-	this.setupGameState();
-	if (this.musicPlaying) {
-		this.backgroundaudio.play();
-	}
-		
+    this.setupGameState();
+    if (this.musicPlaying) {
+        this.backgroundaudio.play();
+    }
+        
 }
 
 GameEngine.prototype.start = function () {
     console.log("starting game");
     var that = this;
     (function gameLoop() {
-		if (that.menuMode == "Game") {
-			that.loop();
+        if (that.menuMode == "Game") {
+            that.loop();
             // TURN ON AGAIN!!
-		} else {//if (that.menuMode == "Start" || that.menuMode == "Pause") {
-			that.menuLoop();
-		}	
+        } else {//if (that.menuMode == "Start" || that.menuMode == "Pause") {
+            that.menuLoop();
+        }   
         requestAnimFrame(gameLoop, that.ctx.canvas); 
     })();
 }
 
 GameEngine.prototype.restart = function () {
-	console.log("restart");
+    console.log("restart");
     // Entities of the Game
     this.entities = []; // All entities of the game
     this.weapons = []; // All the weapons of the game
-	this.items = [];
+    this.items = [];
     // added from 435 ZOMBIE AI Project
     this.villains = []; // All the Zombies | TODO ? Get rid or change ?
     this.players = []; // All the Players | TODO ? Get rid or change ?
@@ -339,16 +339,16 @@ GameEngine.prototype.restart = function () {
     this.kills = 0; // this is the number of kills that the player has total
 
     this.mouse = {x:0, y:0, mousedown:false}; // this is the mouse coordinates and whether the mouse is pressed or not
-	this.keyState = {}; // this is the current keystate which is an object that is nothing
+    this.keyState = {}; // this is the current keystate which is an object that is nothing
 
     this.windowX = 0; // This is the x-coordinate of the top left corner of the canvas currently
     this.windowY = 0; // This is the y-coordinate of the top left corner of the canvas currently   
-	
-	this.setupGameState();
-	if (this.musicPlaying) {
-		this.backgroundaudio.play();
-	}
-		
+    
+    this.setupGameState();
+    if (this.musicPlaying) {
+        this.backgroundaudio.play();
+    }
+        
 }
 
 GameEngine.prototype.generateRandomItem = function(x, y) {
@@ -369,21 +369,21 @@ GameEngine.prototype.generateRandomItem = function(x, y) {
 }
 
 GameEngine.prototype.setupGameState = function () {
-	this.setupMaps();
-	
+    this.setupMaps();
+    
 
         var player = new playerControlled(this);
         player.inplay = true;
         player.controlled = true;
         this.addEntity(player);
 
-	//this.setMap(this.allMaps["ruins"]);
+    //this.setMap(this.allMaps["ruins"]);
         this.setMap(this.allMaps["ruins"]);
-	//this.setMap(this.allMaps["map1"]);
-	//this.menuMode = "Game";
-	this.menuMode = "Start";
-	
-	
+    //this.setMap(this.allMaps["map1"]);
+    //this.menuMode = "Game";
+    this.menuMode = "Start";
+    
+    
 }
 
 GameEngine.prototype.setupMaps = function () {
@@ -425,9 +425,6 @@ GameEngine.prototype.setupMaps = function () {
                         { x: 1338, y: 80 },
                         { x: 939, y: 965 },
                         { x: 1027, y: 1225 },
-                        { x: 660, y: 1029 },
-                        { x: 360, y: 1233 },
-                        { x: 360, y: 924},
                         { x: 752, y: 1250 },
                         { x: 2200, y: 1200 },
                         { x: 1248, y: 1221 }];
@@ -573,7 +570,7 @@ GameEngine.prototype.setupMaps = function () {
     HospitalflameSpawn[3] = { x: 1020, y: 650 };
     HospitalflameSpawn[4] = { x: 980, y: 370 };
 
-	var flamethrower = new FlameThrower(this, ASSET_MANAGER.getAsset("./images/flamethrower.png"), HospitalflameSpawn);
+    var flamethrower = new FlameThrower(this, ASSET_MANAGER.getAsset("./images/flamethrower.png"), HospitalflameSpawn);
     hospitalItems.push(flamethrower);
 
 
@@ -582,9 +579,9 @@ GameEngine.prototype.setupMaps = function () {
     HospitalhealthSpawn[0] = { x: 500, y: 1150 };
     HospitalhealthSpawn[1] = { x: 1270, y: 1050 };
     HospitalhealthSpawn[2] = { x: 970, y: 335 };
-	
-	var healthpack = new HealthPack(this, ASSET_MANAGER.getAsset("./images/HealthPack.png"), HospitalhealthSpawn);
-	hospitalItems.push(healthpack);
+    
+    var healthpack = new HealthPack(this, ASSET_MANAGER.getAsset("./images/HealthPack.png"), HospitalhealthSpawn);
+    hospitalItems.push(healthpack);
 
     // Hospital speed spawning locations
     HospitalspeedSpawn = [];
@@ -598,11 +595,11 @@ GameEngine.prototype.setupMaps = function () {
 
     hospital.dialogue = [];
     hospital.dialogue.push(new Dialogue(this, "Tristan", "Now what?", "./images/tristan.png", 4));
-    hospital.dialogue.push(new Dialogue(this, "Gabrielle", "My friend has been taken by one of the Breaker's henchmen.", "./images/gabrielle.png", 4, true));
-    hospital.dialogue.push(new Dialogue(this, "Gabrielle", "He's trapped within a pocket dimension.", "./images/gabrielle.png", 4, true));
-    hospital.dialogue.push(new Dialogue(this, "Gabrielle", "I will cast us a new portal. It will take me some time to gather energy.", "./images/gabrielle.png", 4, true));
+    hospital.dialogue.push(new Dialogue(this, "Gabrielle", "My friend has been taken by one of the Breaker's henchmen.", "./images/Gabrielle.png", 4, true));
+    hospital.dialogue.push(new Dialogue(this, "Gabrielle", "He's trapped within a pocket dimension.", "./images/Gabrielle.png", 4, true));
+    hospital.dialogue.push(new Dialogue(this, "Gabrielle", "I will cast us a new portal. It will take me some time to gather energy.", "./images/Gabrielle.png", 4, true));
     hospital.dialogue.push(new Dialogue(this, "Tristan", "What do I do until then?", "./images/tristan.png", 4));
-    hospital.dialogue.push(new Dialogue(this, "Gabrielle", "Survive...", "./images/gabrielle.png", 4, true));
+    hospital.dialogue.push(new Dialogue(this, "Gabrielle", "Survive...", "./images/Gabrielle.png", 4, true));
     hospital.dialogue.push(new Dialogue(this, "Tristan", "Thought that was a given.", "./images/tristan.png", 4));
 
     // Ruins flamethrower
@@ -661,17 +658,17 @@ GameEngine.prototype.setupMaps = function () {
             this.game.addEntity(new TimeWarper(this.game));
 
             this.dialogue.push(new Dialogue(this, "Tristan", "Woah! Are you me?", "./images/tristan.png", 4));
-            this.dialogue.push(new Dialogue(this, "Gabrielle", "Tristan meet Alternate World Tristan.", "./images/gabrielle.png", 4, true));
+            this.dialogue.push(new Dialogue(this, "Gabrielle", "Tristan meet Alternate World Tristan.", "./images/Gabrielle.png", 4, true));
             this.dialogue.push(new Dialogue(this, "Tristan", "Like looking in a mirror.", "./images/tristan.png", 4));
             this.dialogue.push(new Dialogue(this, "Tristan", "A good looking mirror..", "./images/tristan.png", 4));
             this.dialogue.push(new Dialogue(this, "Alternate Tristan", "I like this guy, Gabrielle.", "./images/alternate-tristan.png", 4, true));
             this.dialogue.push(new Dialogue(this, "Tristan", "What's going on?", "./images/tristan.png", 4));
-            this.dialogue.push(new Dialogue(this, "Gabrielle", "You were chosen, Tristan.", "./images/gabrielle.png", 4, true));
-            this.dialogue.push(new Dialogue(this, "Gabrielle", "Your soul is a fractured spirit.", "./images/gabrielle.png", 4, true));
-            this.dialogue.push(new Dialogue(this, "Gabrielle", "One existing in multiple dimensions.", "./images/gabrielle.png", 4, true));
-            this.dialogue.push(new Dialogue(this, "Gabrielle", "This Alternate Tristan is a Time Warper, capable of bending time to his will.", "./images/gabrielle.png", 4, true));
-            this.dialogue.push(new Dialogue(this, "Gabrielle", "He will assist us in fighting the Breaker.", "./images/gabrielle.png", 4, true));
-            this.dialogue.push(new Dialogue(this, "Gabrielle", "Come on. We must head back to where we came.", "./images/gabrielle.png", 4, true));
+            this.dialogue.push(new Dialogue(this, "Gabrielle", "You were chosen, Tristan.", "./images/Gabrielle.png", 4, true));
+            this.dialogue.push(new Dialogue(this, "Gabrielle", "Your soul is a fractured spirit.", "./images/Gabrielle.png", 4, true));
+            this.dialogue.push(new Dialogue(this, "Gabrielle", "One existing in multiple dimensions.", "./images/Gabrielle.png", 4, true));
+            this.dialogue.push(new Dialogue(this, "Gabrielle", "This Alternate Tristan is a Time Warper, capable of bending time to his will.", "./images/Gabrielle.png", 4, true));
+            this.dialogue.push(new Dialogue(this, "Gabrielle", "He will assist us in fighting the Breaker.", "./images/Gabrielle.png", 4, true));
+            this.dialogue.push(new Dialogue(this, "Gabrielle", "Come on. We must head back to where we came.", "./images/Gabrielle.png", 4, true));
 
             this.dialogue.push(new Dialogue(this, "NEW PARTY MEMBER", "Alternate Tristan has been added to your party. Swap to him by pressing 3.", null, 4, "gameMessage"));
             this.dialogue.push(new Dialogue(this, "NEW PARTY MEMBER", "Alternate Tristan can slow down and freeze time.", null, 4, "gameMessage"));
@@ -740,7 +737,7 @@ GameEngine.prototype.setupMaps = function () {
         }
 
         if (this.game.kills - this.startingKills > 20 && !this.unlocked) {
-                hospital.dialogue.push(new Dialogue(this, "Gabrielle", "I'm casting the portal. It is time, mortal.", "./images/gabrielle.png", 4, true));
+                hospital.dialogue.push(new Dialogue(this, "Gabrielle", "I'm casting the portal. It is time, mortal.", "./images/Gabrielle.png", 4, true));
                 hospital.dialogue.push(new Dialogue(this, "Tristan", "You know... you are one pushy lady.", "./images/tristan.png", 4));
 
                 hospital.drawDialogue = true;
@@ -770,27 +767,27 @@ GameEngine.prototype.setupMaps = function () {
                     this.game.map.dialogue = [];
                     this.removeFromWorld = true;
                     this.game.addEntity(this.portal);
-                    this.game.map.dialogue.push(new Dialogue(this, "Gabrielle", "Thank you. My soul is in debt to you.", "./images/gabrielle.png", 4, true));
+                    this.game.map.dialogue.push(new Dialogue(this, "Gabrielle", "Thank you. My soul is in debt to you.", "./images/Gabrielle.png", 4, true));
                     this.game.map.dialogue.push(new Dialogue(this, "Tristan", "Holy crap... I think I just died and gone to heaven...", "./images/tristan.png", 4));
                     this.game.map.dialogue.push(new Dialogue(this, "Tristan", "Sexy heaven.", "./images/tristan.png", 4));
-                    this.game.map.dialogue.push(new Dialogue(this, "Gabrielle", "Ugh... mortal men are pigs.", "./images/gabrielle.png", 4, true));
+                    this.game.map.dialogue.push(new Dialogue(this, "Gabrielle", "Ugh... mortal men are pigs.", "./images/Gabrielle.png", 4, true));
 
                     this.game.map.dialogue.push(new Dialogue(this, "Tristan", "So you are an angel?", "./images/tristan.png", 4));
-                    this.game.map.dialogue.push(new Dialogue(this, "Gabrielle", "Of sorts. My name is Gabrielle, the Archangel of Hope.", "./images/gabrielle.png", 4, true));
+                    this.game.map.dialogue.push(new Dialogue(this, "Gabrielle", "Of sorts. My name is Gabrielle, the Archangel of Hope.", "./images/Gabrielle.png", 4, true));
 
                     this.game.map.dialogue.push(new Dialogue(this, "Tristan", "And what... I’m dead?", "./images/tristan.png", 4));
-                    this.game.map.dialogue.push(new Dialogue(this, "Gabrielle", "No... but we are partially in Death.", "./images/gabrielle.png", 4, true));
+                    this.game.map.dialogue.push(new Dialogue(this, "Gabrielle", "No... but we are partially in Death.", "./images/Gabrielle.png", 4, true));
 
                     this.game.map.dialogue.push(new Dialogue(this, "Tristan", "Come again.", "./images/tristan.png", 4));
-                    this.game.map.dialogue.push(new Dialogue(this, "Gabrielle", "The dimensions have shattered. A rift has been made.", "./images/gabrielle.png", 4, true));
-                    this.game.map.dialogue.push(new Dialogue(this, "Gabrielle", "By the Breaker, Destroyer of Realms.", "./images/gabrielle.png", 4, true));
-                    this.game.map.dialogue.push(new Dialogue(this, "Gabrielle", "Heaven, Hell, Death, and the Seven Alternate Worlds have collided.", "./images/gabrielle.png", 4, true));
+                    this.game.map.dialogue.push(new Dialogue(this, "Gabrielle", "The dimensions have shattered. A rift has been made.", "./images/Gabrielle.png", 4, true));
+                    this.game.map.dialogue.push(new Dialogue(this, "Gabrielle", "By the Breaker, Destroyer of Realms.", "./images/Gabrielle.png", 4, true));
+                    this.game.map.dialogue.push(new Dialogue(this, "Gabrielle", "Heaven, Hell, Death, and the Seven Alternate Worlds have collided.", "./images/Gabrielle.png", 4, true));
                     this.game.map.dialogue.push(new Dialogue(this, "Tristan", "Okay... so what happened everyone? Namely... my son.", "./images/tristan.png", 4));
-                    this.game.map.dialogue.push(new Dialogue(this, "Gabrielle", "Their souls have been trapped.", "./images/gabrielle.png", 4, true));
+                    this.game.map.dialogue.push(new Dialogue(this, "Gabrielle", "Their souls have been trapped.", "./images/Gabrielle.png", 4, true));
                     this.game.map.dialogue.push(new Dialogue(this, "Tristan", "What? So why haven't I been trapped?", "./images/tristan.png", 4));
-                    this.game.map.dialogue.push(new Dialogue(this, "Gabrielle", "Help me, and I’ll show you.", "./images/gabrielle.png", 4, true));
+                    this.game.map.dialogue.push(new Dialogue(this, "Gabrielle", "Help me, and I’ll show you.", "./images/Gabrielle.png", 4, true));
                     this.game.map.dialogue.push(new Dialogue(this, "Tristan", "Alright, Angelface, I'm going to trust you for now", "./images/tristan.png", 4));
-                    this.game.map.dialogue.push(new Dialogue(this, "Gabrielle", "There is a portal. We must get to it.", "./images/gabrielle.png", 4, true));
+                    this.game.map.dialogue.push(new Dialogue(this, "Gabrielle", "There is a portal. We must get to it.", "./images/Gabrielle.png", 4, true));
                     this.game.map.dialogue.push(new Dialogue(this, "NEW PARTY MEMBER ADDED", "Swap between party members by pressing 1 or 2.", null, 4, "gameMessage"));
                     this.game.map.dialogue.push(new Dialogue(this, "NEW PARTY MEMBER ADDED", "Angel has attack and health aura's that help party and herself twice as much.", null, 4, "gameMessage"));
 
@@ -877,10 +874,10 @@ GameEngine.prototype.setupMaps = function () {
     mill.addWall(new Wall(this, 2300, 1400, 300, 150));
     mill.addWall(new Wall(this, 1785, 1140, 200, 200));
 
-    mill.dialogue.push(new Dialogue(this, "Gabrielle", "We must find the four orbs of power in this dimension.", "./images/gabrielle.png", 4, true));
-    mill.dialogue.push(new Dialogue(this, "Gabrielle", "With that I can open the gates, to the Breaker’s henchmen’s realm.", "./images/gabrielle.png", 4, true));
-    mill.dialogue.push(new Dialogue(this, "Gabrielle", "There I can forge a portal into the Breaker’s realm.", "./images/gabrielle.png", 4, true));
-    mill.dialogue.push(new Dialogue(this, "Gabrielle", "And free your son and all of the other imprisoned souls.", "./images/gabrielle.png", 4, true));
+    mill.dialogue.push(new Dialogue(this, "Gabrielle", "We must find the four orbs of power in this dimension.", "./images/Gabrielle.png", 4, true));
+    mill.dialogue.push(new Dialogue(this, "Gabrielle", "With that I can open the gates, to the Breaker’s henchmen’s realm.", "./images/Gabrielle.png", 4, true));
+    mill.dialogue.push(new Dialogue(this, "Gabrielle", "There I can forge a portal into the Breaker’s realm.", "./images/Gabrielle.png", 4, true));
+    mill.dialogue.push(new Dialogue(this, "Gabrielle", "And free your son and all of the other imprisoned souls.", "./images/Gabrielle.png", 4, true));
 
     mill.drawDialogue = true;
 
@@ -1004,7 +1001,7 @@ GameEngine.prototype.setupMaps = function () {
     map1.addVillain(boss1);
     map1.addVillain(boss2);
     map1.addVillain(boss3);
-    map1.dialogue.push(new Dialogue(this, "Gabrielle", "Once we destroy, the three henchmen. The final portal will open.", "./images/gabrielle.png", 4, true));
+    map1.dialogue.push(new Dialogue(this, "Gabrielle", "Once we destroy, the three henchmen. The final portal will open.", "./images/Gabrielle.png", 4, true));
     map1.drawDialogue = true;
 
     map1.update = function(){
@@ -1016,7 +1013,7 @@ GameEngine.prototype.setupMaps = function () {
             this.game.lastVillain = undefined;
         }
         if (this.bossCount >= 3 && !this.addFinalMap) {
-            this.dialogue.push(new Dialogue(this, "Gabrielle", "Prepare to fight the Breaker.", "./images/gabrielle.png", 4, true));
+            this.dialogue.push(new Dialogue(this, "Gabrielle", "Prepare to fight the Breaker.", "./images/Gabrielle.png", 4, true));
             this.drawDialogue = true;
 
             this.addFinalMap = true;
@@ -1117,7 +1114,7 @@ GameEngine.prototype.setupMaps = function () {
 
     // this.addEntity(new Portal(this, 800, 600, hospital, 200, 200));
 
-	
+    
     // var angelPlayer = new Angel(this);
     // angelPlayer.x = 600;
     // angelPlayer.canvasX = 32;
@@ -1129,11 +1126,11 @@ GameEngine.prototype.setupMaps = function () {
     // this.addEntity(warperPlayer);
 
     // After Boss maps
-	
-	//save all the maps to the all Maps Array
+    
+    //save all the maps to the all Maps Array
     this.allMaps["ruins"] = ruins;
     this.allMaps["hospital"] = hospital;
-	this.allMaps["map1"] = map1;
+    this.allMaps["map1"] = map1;
     this.allMaps["mill"] = mill;
     // var player2 = new playerControlled(this);
     // this.addEntity(player2);
@@ -1258,7 +1255,7 @@ GameEngine.prototype.addEntity = function (entity) {
     this.entities.push(entity);
     // TODO Delete this!
     if (entity.name === "FlameThrower") this.weapons.push(entity);
-	if (entity.type === "item") this.items.push(entity);
+    if (entity.type === "item") this.items.push(entity);
     if (entity.type === "villain") this.villains.push(entity);
     if (entity.type === "playerControlled") this.players.push(entity);
 }
@@ -1515,10 +1512,10 @@ GameEngine.prototype.update = function () {
         }
     }
     if (!this.map.stopSpiders) {
-	   AddSpiders(this);
+       AddSpiders(this);
     }
     if (!this.map.stopSkeletons) {
-	   AddSkeletons(this);
+       AddSkeletons(this);
     }
 
     // cyles through all of the entities once again
@@ -1538,8 +1535,8 @@ GameEngine.prototype.update = function () {
     for (var i = this.entities.length - 1; i >= 0; --i) {
         // if the entities is removed from world
         if (this.entities[i].removeFromWorld) {            
-			// splice the array from i to 1
-			this.entities.splice(i, 1);
+            // splice the array from i to 1
+            this.entities.splice(i, 1);
         }
     }
 
@@ -1557,7 +1554,7 @@ GameEngine.prototype.update = function () {
             this.lastVillainKilledX = villain.x - villain.radius;
             this.lastVillainKilledY = villain.y - villain.radius;
             this.villains.splice(i, 1);
-            
+
             console.log(this.powerUpKill);
             if (this.kills === this.powerUpKill) {
                 this.powerUpKill = this.kills + randomInt(10) + 1;
@@ -1615,11 +1612,11 @@ GameEngine.prototype.update = function () {
         this.map.walls[i].update();
     }
 
-	//if the players array is empty it is game over you lose
-	if (this.players.length == 0) {
-		this.menuMode = "Lose";
-	}
-	
+    //if the players array is empty it is game over you lose
+    if (this.players.length == 0) {
+        this.menuMode = "Lose";
+    }
+    
     if (this.abilityButton1 && this.click && this.checkMenuClick(this.abilityButton1)) {
         this.getPlayer().currentAbility = 1;
     }
@@ -1727,12 +1724,12 @@ GameEngine.prototype.drawStory = function() {
     var scene3 = 40;
     var indent = 70;
 
-	if (this.alpha5 < 1) {
-		    this.skipIntroButton = {x:this.surfaceWidth - 100, y: this.surfaceHeight - 75, height:50, width:75};    
+    if (this.alpha5 < 1) {
+            this.skipIntroButton = {x:this.surfaceWidth - 100, y: this.surfaceHeight - 75, height:50, width:75};    
 
-		this.skipIntroButton.lines = ["Skip"];
-		this.drawButton(this.skipIntroButton, "transparent");
-	}
+        this.skipIntroButton.lines = ["Skip"];
+        this.drawButton(this.skipIntroButton, "transparent");
+    }
 
     if (this.storyClockSeconds > 1) {
         if (this.alpha1 < 1 && this.storyClockSeconds < scene2) {
@@ -1852,7 +1849,7 @@ GameEngine.prototype.drawLoseMenu = function() {
     } 
     this.drawMessage ("GAME OVER", width + 127, height + 30);
     this.drawMessage ("YOU LOST!", width + 135, height + 60);
-	this.endaudio.play();   
+    this.endaudio.play();   
     height = 50;
     width = 200;
         
@@ -1872,7 +1869,7 @@ GameEngine.prototype.drawWinMenu = function() {
 
     this.drawMessage ("GAME OVER", width + 127, height + 30);
     this.drawMessage ("You Win!!", width + 151, height + 60);
-	this.winaudio.play();
+    this.winaudio.play();
         
     height = 50;
     width = 200;
@@ -1883,33 +1880,33 @@ GameEngine.prototype.drawWinMenu = function() {
 }
 
 GameEngine.prototype.drawMenu = function() {
-	this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+    this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 
     if (this.surfaceHeight == 600) {
         this.ctx.drawImage(this.menuBackground, 0, 0, this.surfaceWidth, this.surfaceHeight, 0, 0, this.surfaceWidth, this.surfaceHeight);
     }
 
-	if (this.menuMode == "Start") {
+    if (this.menuMode == "Start") {
         this.drawStartMenu();
-	} else if (this.menuMode == "Pause") {
+    } else if (this.menuMode == "Pause") {
         this.drawPauseMenu();
-	} else if (this.menuMode == "Lose") {
+    } else if (this.menuMode == "Lose") {
         this.drawLoseMenu();
-	} else if (this.menuMode == "Win") {
+    } else if (this.menuMode == "Win") {
         this.drawWinMenu();
-	} else if (this.menuMode == "Storymode") {
+    } else if (this.menuMode == "Storymode") {
         this.drawStory();
     }
 }
 
 GameEngine.prototype.drawMessage = function(messageToDraw, startX, startY, color, font) {
-	//console.log("color " + color);
-		this.ctx.save();
+    //console.log("color " + color);
+        this.ctx.save();
         if (color === undefined) {
             if (this.surfaceHeight === 600) {
                 this.ctx.fillStyle = "black";
             } else {
-		        this.ctx.fillStyle = "white";
+                this.ctx.fillStyle = "white";
             }
         } else {
             this.ctx.fillStyle = color;
@@ -1918,21 +1915,21 @@ GameEngine.prototype.drawMessage = function(messageToDraw, startX, startY, color
             if (this.surfaceHeight === 600) {
                 this.ctx.font = "24px Georgia";
             } else {
-		        this.ctx.font="25px Arial";
+                this.ctx.font="25px Arial";
             }
         } else {
             this.ctx.font = font;
         }
-		//console.log("this.ctx.fillStyle" + this.ctx.fillStyle);
-		this.ctx.fillText(messageToDraw, startX, startY);
+        //console.log("this.ctx.fillStyle" + this.ctx.fillStyle);
+        this.ctx.fillText(messageToDraw, startX, startY);
 }
 
 GameEngine.prototype.drawButton = function(buttonToDraw, fillColor, textColor) {
-	//console.log("fillcolor" + fillColor);
-	//console.log("textColor" + textColor);
-	this.ctx.save();
-	
-	this.ctx.beginPath();
+    //console.log("fillcolor" + fillColor);
+    //console.log("textColor" + textColor);
+    this.ctx.save();
+    
+    this.ctx.beginPath();
     if (fillColor === undefined) {
         this.ctx.fillStyle = "blue";
     } else {
@@ -1941,49 +1938,49 @@ GameEngine.prototype.drawButton = function(buttonToDraw, fillColor, textColor) {
     this.ctx.fillRect(buttonToDraw.x, buttonToDraw.y, buttonToDraw.width, buttonToDraw.height);
     this.ctx.fill();
     this.ctx.closePath();
-	
-	this.ctx.beginPath();
+    
+    this.ctx.beginPath();
     this.ctx.strokeStyle = "black";
     this.ctx.rect(buttonToDraw.x, buttonToDraw.y, buttonToDraw.width, buttonToDraw.height);
     this.ctx.stroke();
     this.ctx.closePath();
-	
+    
     if (textColor === undefined) {
-	   this.ctx.fillStyle = "white";
+       this.ctx.fillStyle = "white";
     } else {
         this.ctx.fillStyle = textColor;
     }
-	this.ctx.font="25px Arial";
+    this.ctx.font="25px Arial";
 
-	for (var i = 0; i < buttonToDraw.lines.length; i++) {
-		var startX = buttonToDraw.x + buttonToDraw.width/2 - (buttonToDraw.lines[i].length/2 * 15);
-		var startY = buttonToDraw.y + (33 * (i + 1));
-		this.ctx.fillText(buttonToDraw.lines[i], startX, startY);
-	};
-	
-	// this.ctx.beginPath();
+    for (var i = 0; i < buttonToDraw.lines.length; i++) {
+        var startX = buttonToDraw.x + buttonToDraw.width/2 - (buttonToDraw.lines[i].length/2 * 15);
+        var startY = buttonToDraw.y + (33 * (i + 1));
+        this.ctx.fillText(buttonToDraw.lines[i], startX, startY);
+    };
+    
+    // this.ctx.beginPath();
     // this.ctx.fillStyle = "orange";
     // this.ctx.fillRect(buttonToDraw.x, buttonToDraw.y, 5, 5);
     // this.ctx.fill();
     // this.ctx.closePath();
-	
-	// this.ctx.fillText(line1,this.startButton.x + 32,this.startButton.y + 3);	
-	// this.ctx.fillText(line2,this.startButton.x + 35,this.startButton.y + 60);
-	// this.ctx.fillText(line3,this.startButton.x + 38,this.startButton.y + 90);
+    
+    // this.ctx.fillText(line1,this.startButton.x + 32,this.startButton.y + 3); 
+    // this.ctx.fillText(line2,this.startButton.x + 35,this.startButton.y + 60);
+    // this.ctx.fillText(line3,this.startButton.x + 38,this.startButton.y + 90);
     this.ctx.restore();
 }
 
 GameEngine.prototype.checkMenuClick = function (buttonToTest){
     // console.log("X: " + this.click.canvasx + " | Y:" + this.click.canvasy);
-	return(this.click.canvasx >= buttonToTest.x && this.click.canvasx <= buttonToTest.x + buttonToTest.width && this.click.canvasy >= buttonToTest.y && this.click.canvasy <= buttonToTest.y + buttonToTest.height)
+    return(this.click.canvasx >= buttonToTest.x && this.click.canvasx <= buttonToTest.x + buttonToTest.width && this.click.canvasy >= buttonToTest.y && this.click.canvasy <= buttonToTest.y + buttonToTest.height)
 }
 
 // GameEngine.prototype.checkMenuClick = function (x, y, width, height){
-	// console.log(this.click.x >= x);
-	// console.log(this.click.x <= x + width);
-	// console.log(this.click.y >= y);
-	// console.log(this.click.y <= y + height);
-	// return(this.click.x >= x && this.click.x <= x + width && this.click.y >= y && this.click.y <= y + height)
+    // console.log(this.click.x >= x);
+    // console.log(this.click.x <= x + width);
+    // console.log(this.click.y >= y);
+    // console.log(this.click.y <= y + height);
+    // return(this.click.x >= x && this.click.x <= x + width && this.click.y >= y && this.click.y <= y + height)
 // }
 
 // function printout() {
@@ -1991,100 +1988,100 @@ GameEngine.prototype.checkMenuClick = function (buttonToTest){
 // }
 
 GameEngine.prototype.menuLoop = function () {
-	//console.log(window);
-	//console.log(document);
-	//console.log(window.onblur);
-	//window.onblur = function setMenuMode() { console.log("printout called");}
-	//window.onblur = function setMenuMode() { console.log(this.document.getElementById('gameWorld').getContext('2d'));console.log(this.document.getElementById('gameWorld').getContext('2d').test = "now");console.log("printout called");}
-		//window.onblur = function setMenuMode() { this.menuMode = "Pause";console.log("printout called");}
+    //console.log(window);
+    //console.log(document);
+    //console.log(window.onblur);
+    //window.onblur = function setMenuMode() { console.log("printout called");}
+    //window.onblur = function setMenuMode() { console.log(this.document.getElementById('gameWorld').getContext('2d'));console.log(this.document.getElementById('gameWorld').getContext('2d').test = "now");console.log("printout called");}
+        //window.onblur = function setMenuMode() { this.menuMode = "Pause";console.log("printout called");}
 
-	// console.log(document.getElementById('gameWorld'));
-	// console.log(document.getElementById('gameWorld').style);
-	//console.log(document.getElementById('gameWorld').style.cursor = 'pointer');
-	document.getElementById('gameWorld').style.cursor = 'pointer';
-	//console.log(document.getElementById('gameWorld')._proto_;
-	this.drawMenu();
-	
-	//if there is a click, see if it clicked a button
-	//console.log(this.click);
-	if (this.click != null) {
-		//console.log(this.click);
-		//console.log(this.menuMode);
-		if (this.menuMode == "Start") {
-			//console.log(this.checkMenuClick(this.startButton));
-			//console.log(this.click);
-			//console.log(this.startButton);
-			if (this.checkMenuClick(this.startButton)){
-				//console.log("should be starting");
-				this.restart();
-				document.getElementById('gameWorld').style.cursor = '';
+    // console.log(document.getElementById('gameWorld'));
+    // console.log(document.getElementById('gameWorld').style);
+    //console.log(document.getElementById('gameWorld').style.cursor = 'pointer');
+    document.getElementById('gameWorld').style.cursor = 'pointer';
+    //console.log(document.getElementById('gameWorld')._proto_;
+    this.drawMenu();
+    
+    //if there is a click, see if it clicked a button
+    //console.log(this.click);
+    if (this.click != null) {
+        //console.log(this.click);
+        //console.log(this.menuMode);
+        if (this.menuMode == "Start") {
+            //console.log(this.checkMenuClick(this.startButton));
+            //console.log(this.click);
+            //console.log(this.startButton);
+            if (this.checkMenuClick(this.startButton)){
+                //console.log("should be starting");
+                this.restart();
+                document.getElementById('gameWorld').style.cursor = '';
                 if (this.hasSeenIntro) {
-    				this.menuMode = "Game";
+                    this.menuMode = "Game";
                 } else {
                     this.menuMode = "Storymode";
                 }
-			}
-			// } else if (this.checkMenuClick(this.restartButton)){
-				// this.restart();
-				// console.log(document.getElementById('gameWorld').style.cursor = 'url("./images/cursor.png")');
-				// this.menuMode = "Game";
-			// }
-		} else if (this.menuMode == "Pause") {
-			if (this.checkMenuClick(this.continueButton)){
-				//console.log("should be continuing");
-				if (this.musicPlaying) {
-					this.backgroundaudio.play();
-				}					
-				document.getElementById('gameWorld').style.cursor = '';
-				this.menuMode = "Game";
-			} else if (this.checkMenuClick(this.startButton)){
-				//console.log("should be restarting");
-				this.restart();
-				if (this.musicPlaying) {
-					this.backgroundaudio.play();
-				}	
-				document.getElementById('gameWorld').style.cursor = '';
-				this.menuMode = "Game";
-			}
-		} else if (this.menuMode == "Lose" || this.menuMode == "Win") {
-			if (this.checkMenuClick(this.okButton)){								
-				this.menuMode = "Start";
-			}
+            }
+            // } else if (this.checkMenuClick(this.restartButton)){
+                // this.restart();
+                // console.log(document.getElementById('gameWorld').style.cursor = 'url("./images/cursor.png")');
+                // this.menuMode = "Game";
+            // }
+        } else if (this.menuMode == "Pause") {
+            if (this.checkMenuClick(this.continueButton)){
+                //console.log("should be continuing");
+                if (this.musicPlaying) {
+                    this.backgroundaudio.play();
+                }                   
+                document.getElementById('gameWorld').style.cursor = '';
+                this.menuMode = "Game";
+            } else if (this.checkMenuClick(this.startButton)){
+                //console.log("should be restarting");
+                this.restart();
+                if (this.musicPlaying) {
+                    this.backgroundaudio.play();
+                }   
+                document.getElementById('gameWorld').style.cursor = '';
+                this.menuMode = "Game";
+            }
+        } else if (this.menuMode == "Lose" || this.menuMode == "Win") {
+            if (this.checkMenuClick(this.okButton)){                                
+                this.menuMode = "Start";
+            }
         } else if (this.menuMode == "Intro") {
 
-		} else if (this.menuMode == "EndLevel") {
-			if (this.checkMenuClick(this.okButton)){
-				//increment level
-			}
-		} else if (this.menuMode == "Storymode") {
+        } else if (this.menuMode == "EndLevel") {
+            if (this.checkMenuClick(this.okButton)){
+                //increment level
+            }
+        } else if (this.menuMode == "Storymode") {
             if ((this.beginButton && this.checkMenuClick(this.beginButton)) ||
             (this.skipIntroButton && this.checkMenuClick(this.skipIntroButton))) {
                 this.menuMode = "Game";
-				if (this.musicPlaying) {
-					this.backgroundaudio.play();
-				}	
+                if (this.musicPlaying) {
+                    this.backgroundaudio.play();
+                }   
                 document.getElementById('gameWorld').style.cursor = '';
             }
         }
-		
-	}
-	
+        
+    }
+    
 
-	// if (this.click != null) {
-		// //console.log(this.click);
-		// if (this.checkMenuClick(this.startButton)){
-			// this.menuMode = "Game";
-		// }
-		// // if (this.click.x >= this.startButton.x && 
-		// // this.click.x <= this.startButton.x + this.startButton.width &&
-		// // this.click.y >= this.startButton.y && 
-		// // this.click.y <= this.startButton.y + this.startButton.height) {
-			
-			// // //this.showMenu = false;
-			// // //this.FirstMenu = false;
-			// // //this.reset();
-		// // }
-	// }
+    // if (this.click != null) {
+        // //console.log(this.click);
+        // if (this.checkMenuClick(this.startButton)){
+            // this.menuMode = "Game";
+        // }
+        // // if (this.click.x >= this.startButton.x && 
+        // // this.click.x <= this.startButton.x + this.startButton.width &&
+        // // this.click.y >= this.startButton.y && 
+        // // this.click.y <= this.startButton.y + this.startButton.height) {
+            
+            // // //this.showMenu = false;
+            // // //this.FirstMenu = false;
+            // // //this.reset();
+        // // }
+    // }
     //this.clockTick = this.timer.tick(); // increments the clock tick
     //this.update(); // updates the GameEngine and all the entities in the game
     //this.draw(); // draws the GameEngine and all the entities in the game
@@ -2211,23 +2208,23 @@ GameEngine.prototype.loopDialogue = function() {
  * This loops through the game engine until the game ends
  */
 GameEngine.prototype.loop = function () {
-	//pauses the game if game looses focus
-	// if (this.click != null) {
-		// console.log(this.click);
-	// }
+    //pauses the game if game looses focus
+    // if (this.click != null) {
+        // console.log(this.click);
+    // }
 
-	if (this.ctx.lostfocus == "True") {
-		//console.log("lostfocus");
-		this.ctx.lostfocus = "False";
-		this.backgroundaudio.pause();
-		this.menuMode = "Pause";
-	}
+    if (this.ctx.lostfocus == "True") {
+        //console.log("lostfocus");
+        this.ctx.lostfocus = "False";
+        this.backgroundaudio.pause();
+        this.menuMode = "Pause";
+    }
     if (this.gameRunning) {
         this.clockTick = this.timer.tick(); // increments the clock tick
 
         this.update(); // updates the GameEngine and all the entities in the game
 
-    	this.draw(); // draws the GameEngine and all the entities in the game
+        this.draw(); // draws the GameEngine and all the entities in the game
         this.loopDialogue();
 
     } else {
@@ -2237,10 +2234,10 @@ GameEngine.prototype.loop = function () {
     }
 
     this.click = null; // resets the click to null
-	
-	if (this.musicPlaying) {
-		this.backgroundaudio.play();
-	}
+    
+    if (this.musicPlaying) {
+        this.backgroundaudio.play();
+    }
     this.map.update();
 
 }
