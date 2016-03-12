@@ -660,7 +660,7 @@ GameEngine.prototype.setupMaps = function () {
             this.dialogue.push(new Dialogue(this, "Tristan", "Woah! Are you me?", "./images/tristan.png", 4));
             this.dialogue.push(new Dialogue(this, "Gabrielle", "Tristan meet Alternate World Tristan.", "./images/Gabrielle.png", 4, true));
             this.dialogue.push(new Dialogue(this, "Tristan", "Like looking in a mirror.", "./images/tristan.png", 4));
-            this.dialogue.push(new Dialogue(this, "Tristan", "A good looking mirror..", "./images/tristan.png", 4));
+            this.dialogue.push(new Dialogue(this, "Tristan", "A good looking mirror...", "./images/tristan.png", 4));
             this.dialogue.push(new Dialogue(this, "Alternate Tristan", "I like this guy, Gabrielle.", "./images/alternate-tristan.png", 4, true));
             this.dialogue.push(new Dialogue(this, "Tristan", "What's going on?", "./images/tristan.png", 4));
             this.dialogue.push(new Dialogue(this, "Gabrielle", "You were chosen, Tristan.", "./images/Gabrielle.png", 4, true));
@@ -789,7 +789,7 @@ GameEngine.prototype.setupMaps = function () {
                     this.game.map.dialogue.push(new Dialogue(this, "Tristan", "Alright, Angelface, I'm going to trust you for now", "./images/tristan.png", 4));
                     this.game.map.dialogue.push(new Dialogue(this, "Gabrielle", "There is a portal. We must get to it.", "./images/Gabrielle.png", 4, true));
                     this.game.map.dialogue.push(new Dialogue(this, "NEW PARTY MEMBER ADDED", "Swap between party members by pressing 1 or 2.", null, 4, "gameMessage"));
-                    this.game.map.dialogue.push(new Dialogue(this, "NEW PARTY MEMBER ADDED", "Angel has attack and health aura's that help party and herself twice as much.", null, 4, "gameMessage"));
+                    this.game.map.dialogue.push(new Dialogue(this, "NEW PARTY MEMBER ADDED", "Angel has attack and health halo's that help her to hurt and heal.", null, 4, "gameMessage"));
 
                     this.game.addEntity(new Angel(this.game));
                     this.game.map.drawDialogue = true;
@@ -875,7 +875,7 @@ GameEngine.prototype.setupMaps = function () {
     mill.addWall(new Wall(this, 1785, 1140, 200, 200));
 
     mill.dialogue.push(new Dialogue(this, "Gabrielle", "We must find the four orbs of power in this dimension.", "./images/Gabrielle.png", 4, true));
-    mill.dialogue.push(new Dialogue(this, "Gabrielle", "With that I can open the gates, to the Breaker’s henchmen’s realm.", "./images/Gabrielle.png", 4, true));
+    mill.dialogue.push(new Dialogue(this, "Gabrielle", "With that, I can open the gates to the Breaker’s henchmen’s realm.", "./images/Gabrielle.png", 4, true));
     mill.dialogue.push(new Dialogue(this, "Gabrielle", "There I can forge a portal into the Breaker’s realm.", "./images/Gabrielle.png", 4, true));
     mill.dialogue.push(new Dialogue(this, "Gabrielle", "And free your son and all of the other imprisoned souls.", "./images/Gabrielle.png", 4, true));
 
@@ -887,24 +887,25 @@ GameEngine.prototype.setupMaps = function () {
         }
         if (this.randomKillNumber === undefined) {
             this.randomKillNumber = this.game.kills + randomInt(10);
-            this.keyNeedsAdding = true;
+            this.keyNeedsAdding = 0;
         }
         console.log(this.randomKillNumber);
+        if (this.game.kills === this.randomKillNumber && this.keyNeedsAdding === this.numberOfKeys && this.game.lastVillainKilledX && this.randomKillNumber <= this.game.kills && this.numberOfKeys < 4) {
+            this.game.map.keyNeedsAdding += 1;
 
-        if (this.game.kills === this.randomKillNumber && this.keyNeedsAdding && this.game.lastVillainKilledX && this.randomKillNumber <= this.game.kills && this.numberOfKeys < 4) {
-
-            var key = new Key(this.game, this.game.lastVillainKilledX, this.game.lastVillainKilledY, new Portal(this.game.getPlayer().x + 10, this.game.getPlayer().y + 10, this.game.allMaps["map1"], 100, 100), 4);
+            key = new Key(this.game, this.game.lastVillainKilledX, this.game.lastVillainKilledY, new Portal(this.game.getPlayer().x + 10, this.game.getPlayer().y + 10, this.game.allMaps["map1"], 100, 100), 4);
 
             key.update = function () {
-                this.game.map.keyNeedsAdding = true;
-                this.game.map.numberOfKeys += 1;
+                if (!this.unlocked) {
+                    this.game.map.numberOfKeys += 1;
+                    this.unlocked = true;
+                }
                 var player = this.game.getPlayer();
                 if (player && this.collect(player)) {
                     this.removeFromWorld = true;
                 }
             }
             this.game.addEntity(key);
-            this.keyNeedsAdding = false;
             this.randomKillNumber += randomInt(10);
         } else if (this.game.kills === this.randomKillNumber && this.keyNeedsAdding && this.game.lastVillainKilledX && this.randomKillNumber <= this.game.kills && this.numberOfKeys >= 4) {
 
