@@ -2191,6 +2191,7 @@ GameEngine.prototype.loopDialogue = function() {
             this.map.currentDialogueIndex += 1;
             this.map.dialogueStartTime = 0;
             if (this.map.dialogue[this.map.currentDialogueIndex] === undefined) {
+                this.map.currentDialogueIndex = 0;
                 this.map.drawDialogue = false;
                 this.gameRunning = true;
                 return;
