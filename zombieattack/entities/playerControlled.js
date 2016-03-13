@@ -598,8 +598,8 @@ playerControlled.prototype.draw = function (ctx) {
 		
 		this.game.x = this.game.mouse.x;
 		this.game.y = this.game.mouse.y;
-        // console.log("X " + this.game.x);
-        // console.log("Y " + this.game.y);
+        console.log("X " + this.game.x);
+        console.log("Y " + this.game.y);
     }
     
     if (this.timerForSpeed) {

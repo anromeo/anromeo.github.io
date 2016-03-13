@@ -423,7 +423,7 @@ GameEngine.prototype.setupMaps = function () {
     ruins.spawnPoints =[{ x: 1360, y: 652 },
                         { x: 1231, y: 322 },
                         { x: 1338, y: 80 },
-                        { x: 939, y: 965 },
+                        { x: 700, y: 965 },
                         { x: 1027, y: 1225 },
                         { x: 752, y: 1250 },
                         { x: 2200, y: 1200 },
@@ -1799,14 +1799,15 @@ GameEngine.prototype.drawStartMenu = function() {
         var width = 200;
         
         if (this.surfaceHeight == 600) {
-            this.drawMessage("Find the key after killing some zombies!", 180, 80);
-            this.drawMessage("Get through the first portal!", 250, 120);
-            this.drawMessage("Then get 20 kills, walk through the portal and kill the boss to win!", 40, 160);
-            this.drawMessage("Make sure to get the flamethrower before going through the portal!", 40, 200);
+            this.drawMessage("THE BREAKER HAS COME", 260, 80);
+            this.drawMessage("Defeat your enemies", 310, 120);
+            this.drawMessage("Find the orbs and defeat the Breaker's henchmen", 150, 160);
 
-            this.drawMessage("Walk with WASD", 305, 400);
-            this.drawMessage("Use mouse to rotate player", 265, 440);
-            this.drawMessage("Click mouse to shoot", 285, 480);        
+            this.drawMessage("Walk with WASD", 305, 360);
+            this.drawMessage("Use mouse to rotate player", 265, 400);
+            this.drawMessage("Click mouse to shoot", 290, 440);        
+            this.drawMessage("Press Shift and Spacebar to Activate Special Abilities", 150, 480);        
+            this.drawMessage("Press 1, 2, or 3 to Toggle Party Members When Available", 130, 520);        
         } else {
             this.drawMessage("Get 20 kills, walk through the portal and kill the boss to win!", 70, 288);
             this.drawMessage("Make sure to get the flamethrower before going through the portal!", 40, 330);
@@ -1817,7 +1818,7 @@ GameEngine.prototype.drawStartMenu = function() {
             
         }
         //startButton
-        this.startButton = {x:this.ctx.canvas.width/2 - width/2, y:this.ctx.canvas.height/2 - height/2, height:height, width:width};    
+        this.startButton = {x:this.ctx.canvas.width/2 - width/2, y:this.ctx.canvas.height/2 - height/2 - 50, height:height, width:width};    
 
         this.startButton.lines = ["New Game"];
         this.drawButton(this.startButton);
